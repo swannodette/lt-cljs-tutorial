@@ -1,4 +1,9 @@
+;; /////////////////////////////////////////////////////////////////////////////
 ;; An Introduction to ClojureScript for Light Table users
+;; /////////////////////////////////////////////////////////////////////////////
+
+
+;; Basics
 ;; ============================================================================
 
 ;; To begin open the command pane (Control-SPACE), and Add a Light Table UI
@@ -80,6 +85,22 @@ lt-cljs-tutorial/x
 (def a-number 1)
 
 
+;; Function literals
+;; ----------------------------------------------------------------------------
+
+;; ClojureScript also supports a short hand function literal which is useful
+;; You can use the % and %N placeholders to represent function arguments.
+
+(def the-identity #(%))
+
+;; You should not abuse the function literal notation as it degrades readability
+;; outside of simple cases.
+
+(map #(* % 2) [1 2 3 4 5])
+
+(map (fn [n] (* n 2)) [1 2 3 4 5])
+
+
 ;; JavaScript data type literals
 ;; ----------------------------------------------------------------------------
 
@@ -112,4 +133,123 @@ lt-cljs-tutorial/x
 ;; Constructing a type
 ;; ----------------------------------------------------------------------------
 
-;; Of course there are
+;; Of course some JavaScript data types you will want to create with
+;; constructor.
+
+;; (js/Date.) is equivalent to new Date()
+
+(def a-date (js/Date.))
+
+;; Note the above returns an `#inst` data literal.
+
+(def another-date #inst "2014-01-15")
+
+;; Handy
+
+;; NOTE: js/Foo is how you refer to global JavaScript entities of any kind.
+
+js/requestAnimationFrame
+
+
+;; ClojureScript data types
+;; ============================================================================
+
+;; Unless there is a good reason you should generally write your ClojureScript
+;; programs with ClojureScript data types. They have many advantages over
+;; JavaScript data types - they present a uniform API and they are immutable.
+
+;; Vectors
+;; ----------------------------------------------------------------------------
+
+;; Instead of array ClojureScript programmers use persistent vectors, they are
+;; like arrays - they support efficient random access, efficient update
+;; and efficient addition to the end.
+
+(def a-vector [1 2 3 4 5])
+
+;; We can get the length of a vector in constant time via `count`
+
+(count a-vector)
+
+;; We can add an element to the end.
+
+(conj a-vector 6)
+
+;; Note this does not mutate the array! a-vector will be left unchanged.
+
+a-vector
+
+;; Hallelujah!
+
+;; We can access any element in a vector with `nth`. The following will
+;; return the second element.
+
+(nth ["foo" "bar" "baz"] 1)
+
+;; Surprisingly vectors can be treated as functions.
+
+(["foo" "bar" "baz"] 1)
+
+
+;; Maps
+;; ----------------------------------------------------------------------------
+
+;; Along with vectors maps are the most common data type in ClojureScript.
+;; A map usage is again analogous to the usage of Object in JavaScript, but
+;; ClojureScript maps are immutable and considerably more flexible.
+
+;; Let's define a simple map. `:foo` is a ClojureScript keyword. ClojureScript
+;; programmers generally do not use strings for keys.
+
+(def a-map {:foo "bar"})
+
+;; We can access a particular value for a key with `get`:
+
+(get a-map :foo)
+
+;; But again maps can act like functions:
+
+(a-map :foo)
+
+;; However keywords themselves can act like functions and the following
+;; is more idiomatic:
+
+(:foo a-map)
+
+;; We can check if a map contains a key, with `contains?`
+
+(contains? a-map :foo)
+
+
+;; Sets
+;; ----------------------------------------------------------------------------
+
+;; Lists
+;; ----------------------------------------------------------------------------
+
+
+;; Sequences
+;; ============================================================================
+
+;; We said that ClojureScript data strutures are preferred as they provide a
+;; uniform interface. All ClojureScript collections satisfy the ISeqable
+;; protocol, that means iteration is uniform for all collections.
+
+
+;; Moar functions
+;; ============================================================================
+
+
+;; The ClojureScript Standard Library
+;; ============================================================================
+
+
+;; Protocols
+;; ============================================================================
+
+;; extend-type
+;; ----------------------------------------------------------------------------
+
+
+;; Types & Records
+;; ============================================================================

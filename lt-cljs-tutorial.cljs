@@ -651,7 +651,7 @@ some-x
 ;; Protocols
 ;; ============================================================================
 
-;; The ClojurScript language is constructed on a rich sit of protocols. The
+;; The ClojureScript language is constructed on a rich set of protocols. The
 ;; same uniformity provided by ClojureScript collections can be extended to
 ;; your own types or even types that you do not control!
 

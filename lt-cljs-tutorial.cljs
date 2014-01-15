@@ -7,7 +7,7 @@
 ;; ============================================================================
 
 ;; To begin open the command pane (Control-SPACE), and Add a Light Table UI
-;; connection. Once connect you can evaluate all the forms in the file with
+;; connection. Once connected you can evaluate all the forms in this file with
 ;; by placing the cursor after the form and typing Command-ENTER.
 
 
@@ -341,6 +341,34 @@ a-map
 
 ;; Moar functions
 ;; ============================================================================
+
+;; Functions are the essence of any significant ClojureScript program so
+;; we will dive into features that are unique to ClojureScript functions that
+;; might be unfamiliar.
+
+;; Here is a simple function that takes two arguments and adds them.
+
+(defn foo1 [a b]
+  (+ a b))
+
+(foo1 1 2)
+
+;; Function can have multiple arities.
+
+(defn foo2
+  ([a b] (+ a b))
+  ([a b c] (* a b c)))
+
+(foo2 3 4)
+(foo2 3 4 5)
+
+;; Functions support rest arguments.
+
+(defn foo3 [a b & d]
+  [a b d])
+
+(foo3 1 2)
+(foo3 1 2 3 4)
 
 
 ;; Scoping

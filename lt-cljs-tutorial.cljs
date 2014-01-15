@@ -299,16 +299,68 @@ a-map
 (def a-list '(:foo :bar :baz))
 
 
+;; Control
+;; ============================================================================
+
+;; In order to write useful programs we need to be able to be able to express
+;; control. ClojureScript provides the usual control constructs, however
+;; truth-y and false-y values are not the same as in JavaScript so it's worth
+;; reviewing.
+
+
+;; if
+;; ----------------------------------------------------------------------------
+
+;; 0 is not a false-y value.
+
+(if 0
+  "Zero is not false-y"
+  "Yuck")
+
+;; Nor is the empy string.
+
+(if ""
+  "An empty string is not false-y"
+  "Yuck")
+
+;; The only false-y values in ClojureScript are `null `and `false`. `undefined`
+;; is not really a valid ClojureScript value and is generaly coerced to `null`.
+
+
+;; cond
+;; ----------------------------------------------------------------------------
+
+;; Nesting if tends to be noisy and hard to read so ClojureScript provides
+;; a `cond` macro to deal with this.
+
+(cond
+  nil "Not going to return this"
+  false "Nope not going to return this either"
+  :else "Default case")
+
+
+;; Moar functions
+;; ============================================================================
+
+
+;; Scoping
+;; ============================================================================
+
+
+;; Destructuring
+;; ============================================================================
+
+
+;; Error Handling
+;; ============================================================================
+
+
 ;; Sequences
 ;; ============================================================================
 
 ;; We said that ClojureScript data strutures are preferred as they provide a
 ;; uniform interface. All ClojureScript collections satisfy the ISeqable
 ;; protocol, that means iteration is uniform for all collections.
-
-
-;; Moar functions
-;; ============================================================================
 
 
 ;; The ClojureScript Standard Library
@@ -321,6 +373,21 @@ a-map
 ;; extend-type
 ;; ----------------------------------------------------------------------------
 
+;; extend-protocol
+;; ----------------------------------------------------------------------------
+
+;; reify
+;; ----------------------------------------------------------------------------
+
+;; specify
+;; ----------------------------------------------------------------------------
+
 
 ;; Types & Records
 ;; ============================================================================
+
+;; deftype
+;; ----------------------------------------------------------------------------
+
+;; defrecord
+;; ----------------------------------------------------------------------------

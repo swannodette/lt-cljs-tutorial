@@ -495,8 +495,56 @@ some-x
 ;; Map / Filter / Reduce
 ;; ----------------------------------------------------------------------------
 
+;; ClojureScript supports the same bells and whistles out of the box you may
+;; be familiar with from other funtional programming languages or JavaScript
+;; libraries such as Underscore.js
+
+(map inc [0 1 2 3 4 5 6 7 8 9])
+
+(filter even? (range 10))
+
+(remove odd? (range 10))
+
+;; ClojureScript's map and filter operations are lazy. You can stack up
+;; operations without getting too concerned about multiple traversals.
+
+(map #(* % %) (filter even? (range 20)))
+
+(reduce + (range 100))
+
+
 ;; List comprehensions
 ;; ----------------------------------------------------------------------------
+
+;; ClojureScript supports list comprehensions you might know from various
+;; languages. List comprehensions are sometimes more natural / readable
+;; then a series of map/filter operations.
+
+(for [x (range 1 10)
+      y (range 1 10)]
+  [x y])
+
+(for [x (range 1 10)
+      y (range 1 10)
+      :when (and (zero? (rem x y))
+                 (even? (quot x y)))]
+  [x y])
+
+(for [x (range 1 10)
+      y (range 1 10)
+      :let [prod (* x y)]]
+  [x y prod])
+
+
+;; Seqable collections
+;; ----------------------------------------------------------------------------
+
+;; Most ClojureScript collections can be coerced into sequences.
+
+(seq {:foo "bar" :baz "woz"})
+(seq #{:cat :dog :bird})
+(seq [1 2 3 4 5])
+(seq '(1 2 3 4 5))
 
 
 ;; Metadata

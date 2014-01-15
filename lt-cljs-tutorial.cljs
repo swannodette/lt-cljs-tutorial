@@ -637,17 +637,93 @@ some-x
 ;; same uniformity provided by ClojureScript collections can be extended to
 ;; your own types or even types that you do not control!
 
+;; A lot of the uniform power we saw early was because the ClojureScript
+;; collections are implemented in terms of protocols. Collections can be
+;; coerced in sequences because they implement ISeqable. You can use `get`
+;; on vectors and maps because they implement ILookup.
+
+(get {:foo "bar"} :foo)
+(get [:cat :bird :dog] 1)
+
+;; Map destructing actually desugar into `get` calls. That means if you extend
+;; your type to ILookup it will also support map destructuring!
+
+
 ;; extend-type
 ;; ----------------------------------------------------------------------------
+
+;; ClojureScript supports custom extension to types that avoid many of the
+;; pitfalls that you encounter in other languages. For example imagine we have
+;; some awesome polymorphic functionality in mind.
+
+(defprotocol MyProtocol (awesome [this]))
+
+;; Now imagine we want to JavaScript strings to participate. We can do this
+;; simply.
+
+(extend-type string
+  MyProtocol
+  (awesome [_] "Totally awesome!"))
+
+(awesome "Is this awesome?")
+
 
 ;; extend-protocol
 ;; ----------------------------------------------------------------------------
 
+;; Sometimes you want to extend several types to a protocol at once.
+
+(extend-protocol MyProtocol
+  js/Date
+  (awesome [_] "Having an awesome time!")
+  number
+  (awesome [_] "I'm an awesome number!"))
+
+(awesome #inst "2014")
+(awesome 5)
+
+
 ;; reify
 ;; ----------------------------------------------------------------------------
 
+;; Sometimes it's useful to make an anonymous type which implements some
+;; various protocols.
+
+;; For example say we want JavaScript object to support ILookup. No we don't
+;; to blindly `extend-type object`, that would pollute the behavior of plain
+;; JavaScript objects for everyone.
+
+;; Instead we can provide a helper function that takes an object and returns
+;; something that provides this functionality.
+
+(defn ->lookup [obj]
+  (reify
+    ILookup
+    (-lookup [this k]
+      (-lookup this k nil))
+    (-lookup [this k not-found]
+      (let [k (name k)]
+        (if (.hasOwnProperty obj k)
+          (aget obj k)
+          not-found)))))
+
+;; We can then selectively make JavaScript objects work with `get`.
+
+(get (->lookup #js {"foo" "bar"}) :foo)
+
+;; But this also means we get destructuring on JavaScript objects.
+
+(def some-object #js {"foo" "bar" "baz" "woz"})
+
+(let [{:keys [foo baz]} (->lookup some-object)]
+  [foo baz])
+
+
 ;; specify
 ;; ----------------------------------------------------------------------------
+
+;; Light Table ships with a older version of ClojureScript and does not yet
+;; support specify
 
 
 ;; Macros
@@ -661,6 +737,26 @@ some-x
 ;; arrays is unavoidable. ClojureScript provides a variety of functions for
 ;; creating and manipulating JavaScript arrays.
 
+;; You can make an array of specific size with `make-array`
+
+(make-array 32)
+
+;; You can access an element of a array with `aget`.
+
+(aget #js ["one" "two" "three"] 1)
+
+;; You can access nested arrays with `aget`.
+
+(aget #js [#js ["one" "two" "three"]] 0 1)
+
+;; You can set the contents of an array with aset.
+
+(def yucky-stuff #js [1 2 3])
+
+(aset yucky-stuff 1 4)
+
+yucky-stuff
+
 
 ;; Types & Records
 ;; ============================================================================
@@ -668,5 +764,73 @@ some-x
 ;; deftype
 ;; ----------------------------------------------------------------------------
 
+;; Sometimes a map will simply not suffice, in these cases you will want to
+;; make your own custom type.
+
+(deftype Foo [a b])
+
+;; You can instantiate a deftype instance using the same constructor pattern
+;; we've already discussed.
+
+(Foo. 1 2)
+
+;; You can access properties of a deftype instance using property access
+;; syntax.
+
+(.-a (Foo. 1 2))
+
+;; You can implement protocol methods on a deftype.
+
+(deftype Foo [a b]
+  ICounted
+  (-count [_] 2))
+
+(count (Foo. 1 2))
+
+;; Sometimes it's useful to implement methods directly on the deftype.
+
+(deftype Foo [a b]
+  Object
+  (toString [_] (str a ", " b)))
+
+(.toString (Foo. 1 2))
+
+;; deftype field are immutable unless specified. The following will not compile.
+
+(deftype Foo [a ^:mutable b]
+  Object
+  (setA [_ val] (set! a val)))
+
+;; The following will compile.
+
+(deftype Foo [a ^:mutable b]
+  Object
+  (setB [_ val] (set! b val)))
+
+
 ;; defrecord
 ;; ----------------------------------------------------------------------------
+
+;; deftype doesn't provide much out of the box. Often what you want to do is
+;; have a domain object that acts more or less like a map. This is what
+;; defrecord is for.
+
+(defrecord Person [first last])
+
+;; You can construct an instance in the usual way.
+
+(Person. "Bob" "Smith")
+
+;; Or you can use the provided constructors.
+
+(->Person "Bob" "Smith")
+
+(map->Person {:first "Bob" :last "Smith"})
+
+;; records work like maps
+
+(seq (->Person "Bob" "Smith"))
+
+(:first (->Person "Bob" "Smith"))
+
+(keys (->Person "Bob" "Smith"))

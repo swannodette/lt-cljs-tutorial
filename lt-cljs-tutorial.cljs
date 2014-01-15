@@ -810,3 +810,27 @@ yucky-stuff
 
 ;; defrecord
 ;; ----------------------------------------------------------------------------
+
+;; deftype doesn't provide much out of the box. Often what you want to do is
+;; have a domain object that acts more or less like a map. This is what
+;; defrecord is for.
+
+(defrecord Person [first last])
+
+;; You can construct an instance in the usual way.
+
+(Person. "Bob" "Smith")
+
+;; Or you can use the provided constructors.
+
+(->Person "Bob" "Smith")
+
+(map->Person {:first "Bob" :last "Smith"})
+
+;; records work like maps
+
+(seq (->Person "Bob" "Smith"))
+
+(:first (->Person "Bob" "Smith"))
+
+(keys (->Person "Bob" "Smith"))

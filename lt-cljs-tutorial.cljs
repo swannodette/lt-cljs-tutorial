@@ -457,19 +457,31 @@ some-x
 ;; Metadata
 ;; ============================================================================
 
+;; All of the ClojureScript standard collections support metadata. Metadata
+;; is a useful way to annotate data without effecting equality. The
+;; ClojureScript compiler uses this language feature to great effect.
 
 
 ;; Error Handling
 ;; ============================================================================
 
 
-
 ;; The ClojureScript Standard Library
 ;; ============================================================================
+
+;; The ClojureScript standard library largely mirrors the Clojure standard
+;; library with the exception of functionality that assumes a multithreaded
+;; environment, first class namespaces, and Java numerics.
+
+;; Here are some highlights that newcomers to ClojureScript might find useful.
 
 
 ;; Protocols
 ;; ============================================================================
+
+;; The ClojurScript language is constructed on a rich sit of protocols. The
+;; same uniformity provided by ClojureScript collections can be extended to
+;; your own types or even types that you do not control!
 
 ;; extend-type
 ;; ----------------------------------------------------------------------------
@@ -482,6 +494,18 @@ some-x
 
 ;; specify
 ;; ----------------------------------------------------------------------------
+
+
+;; Macros
+;; ============================================================================
+
+
+;; Primitive Array Operations
+;; ============================================================================
+
+;; When writing performance sensitive code some times dealing with mutable
+;; arrays is unavoidable. ClojureScript provides a variety of functions for
+;; creating and manipulating JavaScript arrays.
 
 
 ;; Types & Records

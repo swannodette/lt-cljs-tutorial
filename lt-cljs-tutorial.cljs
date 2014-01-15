@@ -737,12 +737,76 @@ some-x
 ;; arrays is unavoidable. ClojureScript provides a variety of functions for
 ;; creating and manipulating JavaScript arrays.
 
+;; You can make an array of specific size with `make-array`
+
+(make-array 32)
+
+;; You can access an element of a array with `aget`.
+
+(aget #js ["one" "two" "three"] 1)
+
+;; You can access nested arrays with `aget`.
+
+(aget #js [#js ["one" "two" "three"]] 0 1)
+
+;; You can set the contents of an array with aset.
+
+(def yucky-stuff #js [1 2 3])
+
+(aset yucky-stuff 1 4)
+
+yucky-stuff
+
 
 ;; Types & Records
 ;; ============================================================================
 
 ;; deftype
 ;; ----------------------------------------------------------------------------
+
+;; Sometimes a map will simply not suffice, in these cases you will want to
+;; make your own custom type.
+
+(deftype Foo [a b])
+
+;; You can instantiate a deftype instance using the same constructor pattern
+;; we've already discussed.
+
+(Foo. 1 2)
+
+;; You can access properties of a deftype instance using property access
+;; syntax.
+
+(.-a (Foo. 1 2))
+
+;; You can implement protocol methods on a deftype.
+
+(deftype Foo [a b]
+  ICounted
+  (-count [_] 2))
+
+(count (Foo. 1 2))
+
+;; Sometimes it's useful to implement methods directly on the deftype.
+
+(deftype Foo [a b]
+  Object
+  (toString [_] (str a ", " b)))
+
+(.toString (Foo. 1 2))
+
+;; deftype field are immutable unless specified. The following will not compile.
+
+(deftype Foo [a ^:mutable b]
+  Object
+  (setA [_ val] (set! a val)))
+
+;; The following will compile.
+
+(deftype Foo [a ^:mutable b]
+  Object
+  (setB [_ val] (set! b val)))
+
 
 ;; defrecord
 ;; ----------------------------------------------------------------------------

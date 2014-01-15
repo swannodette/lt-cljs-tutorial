@@ -195,24 +195,44 @@ a-vector
 ;; ----------------------------------------------------------------------------
 
 ;; Along with vectors maps are the most common data type in ClojureScript.
-;; A map usage is again analogous to the usage of Object in JavaScript, but
+;; Map usage is analogous to the usage of Object in JavaScript, but
 ;; ClojureScript maps are immutable and considerably more flexible.
 
 ;; Let's define a simple map. `:foo` is a ClojureScript keyword. ClojureScript
 ;; programmers generally do not use strings for keys.
 
-(def a-map {:foo "bar"})
+(def a-map {:foo "bar" :baz "woz"})
+
+;; We can get the number of key-value pairs in constant time
+
+(count a-map)
 
 ;; We can access a particular value for a key with `get`:
 
 (get a-map :foo)
 
-;; But again maps can act like functions:
+;; We can add a new key-value pair with `assoc`
+
+(assoc a-map :noz "goz")
+
+;; Again a-map is unchanged!
+
+a-map
+
+;; We can remove a key value pair with `dissoc`
+
+(dissoc a-map :foo)
+
+;; Again a-map is unchanged!
+
+a-map
+
+;; Like vectors maps can act like functions:
 
 (a-map :foo)
 
-;; However keywords themselves can act like functions and the following
-;; is more idiomatic:
+;; However ClojureScript keywords themselves can act like functions and the
+;; following is more idiomatic:
 
 (:foo a-map)
 
@@ -220,9 +240,34 @@ a-vector
 
 (contains? a-map :foo)
 
+;; We can get all the keys in a map with `keys`
+
+(keys a-map)
+
+;; And all of the val with `vals`
+
+(vals a-map)
+
+;; There are many cool ways to create maps
+
+(zipmap [:foo :bar :baz] [1 2 3])
+
+(hash-map :foo 1 :bar 2 :baz 3)
+
+(apply hash-map [:foo 1 :bar 2 :baz 3])
+
+(into {} [[:foo 1] [:bar 2] [:baz 3]])
+
+;; Unlike JavaScript objects ClojureScript maps support complex keys
+
+(def complex-map {[1 2] :one-two [3 4] :three-four})
+
+(get complex-map [3 4])
+
 
 ;; Sets
 ;; ----------------------------------------------------------------------------
+
 
 ;; Lists
 ;; ----------------------------------------------------------------------------

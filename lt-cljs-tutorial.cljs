@@ -554,6 +554,21 @@ some-x
 ;; is a useful way to annotate data without effecting equality. The
 ;; ClojureScript compiler uses this language feature to great effect.
 
+;; You can add meta data to ClojureScript collection with `with-meta`. The
+;; meta data must be a map.
+
+(def plain-data [0 1 2 3 4 5 6 7 8 9])
+
+(def decorated-data (with-meta plain-data {:url "http://lighttable.com"}))
+
+;; Metadata has no effect on equality.
+
+(= plain-data decorated-data)
+
+;; You can access meta with `meta`.
+
+(meta decorated-data)
+
 
 ;; Error Handling
 ;; ============================================================================

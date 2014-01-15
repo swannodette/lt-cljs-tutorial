@@ -339,6 +339,18 @@ a-map
   :else "Default case")
 
 
+;; loop/recur
+;; ----------------------------------------------------------------------------
+
+;; The most primitive looping construct in ClojureScript is loop/recur. Most
+;; of the iteration constructs are defined in terms of it.
+
+(loop [i 0 ret []]
+  (if (< i 10)
+    (recur (inc i) (conj ret i))
+    ret))
+
+
 ;; Moar functions
 ;; ============================================================================
 
@@ -373,6 +385,26 @@ a-map
 
 ;; Scoping
 ;; ============================================================================
+
+;; Unlike JavaScript there is no hoisting in ClojureScript. ClojureScript
+;; has lexical scoping. In ClojureScript functions parameters and let binding
+;; locals are not mutable!
+
+(def some-x 1)
+
+(let [some-x 2]
+  some-x)
+
+some-x
+
+;; Unlike JavaScript loop locals are not mutable! In JavaScript you would see
+;; a list of ten 9's. In ClojureScript we see the expected numbers from 0 to 9.
+
+(let [fns (loop [i 0 ret []]
+            (if (< i 10)
+              (recur (inc i) (conj ret (fn [] i)))
+              ret))]
+  (map #(%) fns))
 
 
 ;; Destructuring

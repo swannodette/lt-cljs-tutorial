@@ -573,6 +573,24 @@ some-x
 ;; Error Handling
 ;; ============================================================================
 
+;; Error handling in ClojureScript is relatively straight forward and more less
+;; similar to what is offered in JavaScript.
+
+;; You can construct an error like this:
+
+(js/Error. "Oops")
+
+;; You can throw an error like this:
+
+(throw (js/Error. "Oops"))
+
+;; You can catch an error like this:
+
+(try
+  (throw (js/Error. "Oops"))
+  (catch js/Error e
+    e))
+
 
 ;; The ClojureScript Standard Library
 ;; ============================================================================

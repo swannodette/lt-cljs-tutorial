@@ -7,7 +7,7 @@
 ;; ============================================================================
 
 ;; To begin open the command pane (Control-SPACE), and Add a Light Table UI
-;; connection. Once connected you can evaluate all the forms in this file with
+;; connection. Once connected you can evaluate all the forms in this file
 ;; by placing the cursor after the form and typing Command-ENTER.
 
 

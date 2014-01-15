@@ -445,6 +445,45 @@ some-x
 ;; proposed for ES6, but the system provided in ClojureScript benefits from
 ;; all the collections supporting uniform access.
 
+;; Sequence destructuring
+;; ----------------------------------------------------------------------------
+
+;; Destructuring sequential types is particular useful
+
+(let [[f & r] '(1 2 3)]
+  f)
+
+(let [[f & r] '(1 2 3)]
+  r)
+
+(let [[r g b] [255 255 150]]
+  g)
+
+;; _ is just a convention it has no special meaning.
+(let [[_ _ b] [255 255 150]]
+  b)
+
+;; destructuring function arguments works just as well.
+
+(defn green [[_ g _]] g)
+
+(green [255 255 150])
+
+;; Map destructuring
+;; ----------------------------------------------------------------------------
+
+;; Map destructuring is also useful. Here we destructure the value for the
+;; `:foo` key and bind it to a local `f`, and the value for `:baz` key
+;; and bind it to a local `b`.
+
+(let [{f :foo b :baz} {:foo "bar" :baz "woz"}]
+  [f b])
+
+;; If we don't want to rename we can just use `:keys`
+
+(let [{:keys [first last]} {:first "Bob" :last "Smith"}]
+  [first last])
+
 
 ;; Sequences
 ;; ============================================================================
@@ -452,6 +491,12 @@ some-x
 ;; We said that ClojureScript data strutures are preferred as they provide a
 ;; uniform interface. All ClojureScript collections satisfy the ISeqable
 ;; protocol, that means iteration is uniform for all collections.
+
+;; Map / Filter / Reduce
+;; ----------------------------------------------------------------------------
+
+;; List comprehensions
+;; ----------------------------------------------------------------------------
 
 
 ;; Metadata

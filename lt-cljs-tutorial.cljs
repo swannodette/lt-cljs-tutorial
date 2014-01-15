@@ -409,6 +409,24 @@ a-map
 (foo3 1 2 3 4)
 
 
+;; multimethods
+;; ----------------------------------------------------------------------------
+
+;; Often when you need some polymorphism and performance isn't an issue
+;; multimethods will suffice.
+
+(defmulti parse (fn [[f & r :as form]] f))
+
+(defmethod parse 'if
+  [form] {:op :if})
+
+(defmethod parse 'let
+  [form] {:op :let})
+
+(parse '(if a b c))
+(parse '(let [x 1] x))
+
+
 ;; Scoping
 ;; ============================================================================
 

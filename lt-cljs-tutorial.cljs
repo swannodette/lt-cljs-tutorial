@@ -244,7 +244,7 @@ a-map
 
 (keys a-map)
 
-;; And all of the val with `vals`
+;; And all of the values with `vals`
 
 (vals a-map)
 
@@ -268,9 +268,35 @@ a-map
 ;; Sets
 ;; ----------------------------------------------------------------------------
 
+;; ClojureScript also supports sets.
+
+(def a-set #{:cat :dog :bird})
+
+;; `:cat` is already in `a-set`, so it will be unchanged
+
+(conj a-set :cat)
+
+;; But `:zebra` isn't
+
+(conj a-set :zebra)
+
+;; If you haven't guessed already, `conj` is a "polymorphic" function that adds
+;; an item to a collection. This is some of the uniformity we alluded to
+;; earlier.
+
+;; `contains?` works on sets just like they do on maps.
+
+(contains? a-set :cat)
+
 
 ;; Lists
 ;; ----------------------------------------------------------------------------
+
+;; A less common Clojure data structure is lists. This may be surprising as
+;; Clojure is a Lisp, but maps, vectors and sets are the goto for most
+;; applications. Still lists are sometimes useful.
+
+(def a-list '(:foo :bar :baz))
 
 
 ;; Sequences

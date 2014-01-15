@@ -316,7 +316,7 @@ a-map
 
 (= [1 2 3] '(1 2 3))
 
-;; It possible to check whether two things are represented by the same thing
+;; It's possible to check whether two things are represented by the same thing
 ;; in memory with `identical?`
 
 (def my-vec [1 2 3])

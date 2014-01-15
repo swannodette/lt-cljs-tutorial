@@ -94,7 +94,8 @@ lt-cljs-tutorial/x
 (def the-identity #(%))
 
 ;; You should not abuse the function literal notation as it degrades readability
-;; outside of simple cases.
+;; outside of simple cases. It is nice for simple functional cases such as
+;; the following.
 
 (map #(* % 2) [1 2 3 4 5])
 
@@ -299,6 +300,31 @@ a-map
 (def a-list '(:foo :bar :baz))
 
 
+;; Equality
+;; ============================================================================
+
+;; ClojureScript has a much simpler notion of equality than what is present
+;; in JavaScript. In ClojureScript equality is always deep equality.
+
+(= {:foo "bar" :baz "woz"} {:foo "bar" :baz "woz"})
+
+;; Maps are not ordered.
+
+(= {:foo "bar" :baz "woz"} {:baz "woz" :foo "bar"})
+
+;; For sequential collections equality just works.
+
+(= [1 2 3] '(1 2 3))
+
+;; It possible to check whether two things are represented by the same thing
+;; in memory with `identical?`
+
+(def my-vec [1 2 3])
+(def your-vec [1 2 3])
+
+(identical? my-vec your-vec)
+
+
 ;; Control
 ;; ============================================================================
 
@@ -410,9 +436,14 @@ some-x
 ;; Destructuring
 ;; ============================================================================
 
+;; In any serious ClojureScript program there will be signifiant amounts of
+;; data manipulation. Again we will see that ClojureScript's uniformity
+;; pays off.
 
-;; Error Handling
-;; ============================================================================
+;; In ClojureScript anywhere bindings are allowed like `let` or function
+;; parameters destructuring is allowed. This is similar to the destructuring
+;; proposed for ES6, but the system provided in ClojureScript benefits from
+;; all the collections supporting uniform access.
 
 
 ;; Sequences
@@ -421,6 +452,16 @@ some-x
 ;; We said that ClojureScript data strutures are preferred as they provide a
 ;; uniform interface. All ClojureScript collections satisfy the ISeqable
 ;; protocol, that means iteration is uniform for all collections.
+
+
+;; Metadata
+;; ============================================================================
+
+
+
+;; Error Handling
+;; ============================================================================
+
 
 
 ;; The ClojureScript Standard Library

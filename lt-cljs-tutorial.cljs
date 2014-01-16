@@ -873,7 +873,7 @@ yucky-stuff
 (map->Person {:first "Bob" :last "Smith"})
 
 ;; It's considered idiomatic and even recommended to define a factory function
-;; which returns the created instance of a defrecord/deftype. It's idiomat to use
+;; which returns the created instance of a defrecord/deftype. It's idiomatic to use
 ;; dash-case for factories names.
 
 (defn person [first last]

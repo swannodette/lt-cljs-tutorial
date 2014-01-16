@@ -121,7 +121,7 @@ lt-cljs-tutorial/x
 (def another-object #js {"foo" "bar"})
 
 ;; It's important to note that `#js` is shallow, the contents of `#js` will be
-;; ClojureScript data unless preceded by #js.
+;; ClojureScript data unless preceded by `#js`.
 
 ;; This is a mutable JavaScript object with an immutable ClojureScript vector
 ;; inside.
@@ -135,7 +135,7 @@ lt-cljs-tutorial/x
 ;; Of course some JavaScript data types you will want to create with
 ;; constructor.
 
-;; (js/Date.) is equivalent to new Date()
+;; (js/Date.) is equivalent to new Date().
 
 (def a-date (js/Date.))
 
@@ -160,13 +160,13 @@ js/requestAnimationFrame
 ;; Vectors
 ;; ----------------------------------------------------------------------------
 
-;; Instead of array ClojureScript programmers use persistent vectors, they are
+;; Instead of arrays ClojureScript programmers use persistent vectors, they are
 ;; like arrays - they support efficient random access, efficient update
 ;; and efficient addition to the end.
 
 (def a-vector [1 2 3 4 5])
 
-;; We can get the length of a vector in constant time via `count`
+;; We can get the length of a vector in constant time via `count`.
 
 (count a-vector)
 
@@ -174,7 +174,7 @@ js/requestAnimationFrame
 
 (conj a-vector 6)
 
-;; Note this does not mutate the array! a-vector will be left unchanged.
+;; Note this does not mutate the array! `a-vector` will be left unchanged.
 
 a-vector
 
@@ -197,20 +197,20 @@ a-vector
 ;; Map usage is analogous to the usage of Object in JavaScript, but
 ;; ClojureScript maps are immutable and considerably more flexible.
 
-;; Let's define a simple map. `:foo` is a ClojureScript keyword. ClojureScript
-;; programmers generally do not use strings for keys.
+;; Let's define a simple map. Note `:foo` is a ClojureScript keyword.
+;; ClojureScript programmers generally do not use strings for keys.
 
 (def a-map {:foo "bar" :baz "woz"})
 
-;; We can get the number of key-value pairs in constant time
+;; We can get the number of key-value pairs in constant time.
 
 (count a-map)
 
-;; We can access a particular value for a key with `get`:
+;; We can access a particular value for a key with `get`.
 
 (get a-map :foo)
 
-;; We can add a new key-value pair with `assoc`
+;; We can add a new key-value pair with `assoc`.
 
 (assoc a-map :noz "goz")
 
@@ -218,7 +218,7 @@ a-vector
 
 a-map
 
-;; We can remove a key value pair with `dissoc`
+;; We can remove a key value pair with `dissoc`.
 
 (dissoc a-map :foo)
 
@@ -226,28 +226,28 @@ a-map
 
 a-map
 
-;; Like vectors maps can act like functions:
+;; Like vectors maps can act like functions.
 
 (a-map :foo)
 
 ;; However ClojureScript keywords themselves can act like functions and the
-;; following is more idiomatic:
+;; following is more idiomatic.
 
 (:foo a-map)
 
-;; We can check if a map contains a key, with `contains?`
+;; We can check if a map contains a key, with `contains?`.
 
 (contains? a-map :foo)
 
-;; We can get all the keys in a map with `keys`
+;; We can get all the keys in a map with `keys`.
 
 (keys a-map)
 
-;; And all of the values with `vals`
+;; And all of the values with `vals`.
 
 (vals a-map)
 
-;; There are many cool ways to create maps
+;; There are many cool ways to create maps.
 
 (zipmap [:foo :bar :baz] [1 2 3])
 
@@ -257,7 +257,7 @@ a-map
 
 (into {} [[:foo 1] [:bar 2] [:baz 3]])
 
-;; Unlike JavaScript objects ClojureScript maps support complex keys
+;; Unlike JavaScript objects ClojureScript maps support complex keys.
 
 (def complex-map {[1 2] :one-two [3 4] :three-four})
 
@@ -271,11 +271,11 @@ a-map
 
 (def a-set #{:cat :dog :bird})
 
-;; `:cat` is already in `a-set`, so it will be unchanged
+;; `:cat` is already in `a-set`, so it will be unchanged.
 
 (conj a-set :cat)
 
-;; But `:zebra` isn't
+;; But `:zebra` isn't.
 
 (conj a-set :zebra)
 
@@ -314,8 +314,8 @@ a-map
 
 (= [1 2 3] '(1 2 3))
 
-;; It's possible to check whether two things are represented by the same thing
-;; in memory with `identical?`
+;; It is possible to check whether two things are represented by the same thing
+;; in memory with `identical?`.
 
 (def my-vec [1 2 3])
 (def your-vec [1 2 3])
@@ -367,7 +367,9 @@ a-map
 ;; ----------------------------------------------------------------------------
 
 ;; The most primitive looping construct in ClojureScript is loop/recur. Most
-;; of the iteration constructs are defined in terms of it.
+;; of the iteration constructs are defined in terms of it. Using loop/recur
+;; usually consider bad style if a reasonable functional solution via
+;; map/filter/reduce is possible.
 
 (loop [i 0 ret []]
   (if (< i 10)
@@ -389,7 +391,7 @@ a-map
 
 (foo1 1 2)
 
-;; Function can have multiple arities.
+;; Functions can have multiple arities.
 
 (defn foo2
   ([a b] (+ a b))
@@ -405,6 +407,10 @@ a-map
 
 (foo3 1 2)
 (foo3 1 2 3 4)
+
+;; You can apply functions.
+
+(apply + [1 2 3 4 5])
 
 
 ;; multimethods

@@ -497,6 +497,7 @@ some-x
   g)
 
 ;; _ is just a convention it has no special meaning.
+
 (let [[_ _ b] [255 255 150]]
   b)
 
@@ -505,6 +506,7 @@ some-x
 (defn green [[_ g _]] g)
 
 (green [255 255 150])
+
 
 ;; Map destructuring
 ;; ----------------------------------------------------------------------------
@@ -585,7 +587,8 @@ some-x
 (seq '(1 2 3 4 5))
 
 ;; Many ClojureScript functions will call `seq` on their arguments in order to
-;; provide the expected behavior.
+;; provide the expected behavior. The following demonstrates that you can
+;; uniformly iterate over all the ClojureScript collections!
 
 (first {:foo "bar" :baz "woz"})
 (rest {:foo "bar" :baz "woz"})

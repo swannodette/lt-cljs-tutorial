@@ -149,6 +149,9 @@ lt-cljs-tutorial/x
 
 js/requestAnimationFrame
 
+;; If you're curious about other JavaScrip interop jump to the bottom of this
+;; tutorial.
+
 
 ;; ClojureScript data types
 ;; ============================================================================
@@ -753,8 +756,8 @@ some-x
 ;; Sometimes it's useful to make an anonymous type which implements some
 ;; various protocols.
 
-;; For example say we want JavaScript object to support ILookup. No we don't
-;; to blindly `extend-type object`, that would pollute the behavior of plain
+;; For example say we want JavaScript object to support ILookup. Now we don't
+;; want to blindly `extend-type object`, that would pollute the behavior of plain
 ;; JavaScript objects for everyone.
 
 ;; Instead we can provide a helper function that takes an object and returns
@@ -794,34 +797,6 @@ some-x
 ;; ============================================================================
 
 
-;; Primitive Array Operations
-;; ============================================================================
-
-;; When writing performance sensitive code some times dealing with mutable
-;; arrays is unavoidable. ClojureScript provides a variety of functions for
-;; creating and manipulating JavaScript arrays.
-
-;; You can make an array of specific size with `make-array`
-
-(make-array 32)
-
-;; You can access an element of a array with `aget`.
-
-(aget #js ["one" "two" "three"] 1)
-
-;; You can access nested arrays with `aget`.
-
-(aget #js [#js ["one" "two" "three"]] 0 1)
-
-;; You can set the contents of an array with aset.
-
-(def yucky-stuff #js [1 2 3])
-
-(aset yucky-stuff 1 4)
-
-yucky-stuff
-
-
 ;; Types & Records
 ;; ============================================================================
 
@@ -831,12 +806,10 @@ yucky-stuff
 ;; Sometimes a map will simply not suffice, in these cases you will want to
 ;; make your own custom type.
 
-;; It's idiomatic to use CamelCase to name a deftype.
-
 (deftype Foo [a b])
 
-;; You can instantiate a deftype instance using the same constructor pattern
-;; we've already discussed.
+;; It's idiomatic to use CamelCase to name a deftype. You can instantiate a
+;; deftype instance using the same constructor pattern we've already discussed.
 
 (Foo. 1 2)
 
@@ -916,3 +889,55 @@ yucky-stuff
 
 (keys (assoc (person "Bob" "Smith") :age 18))
 
+
+;; JavaScript Interop
+;; ============================================================================
+
+;; Property Access
+;; ----------------------------------------------------------------------------
+
+(def a-date (js/Date.))
+
+;; You can access properties with the `.-` property access syntax.
+
+(.-getSeconds a-date)
+
+;; Methods can be invoke with the `.` syntax.
+
+(.getSeconds a-date)
+
+;; The above desugars into the following.
+
+(. a-date (getSeconds))
+
+;; For example you can write a `console.log` call like so.
+
+(. js/console (log "Interop!"))
+
+
+;; Primitive Array Operations
+;; ----------------------------------------------------------------------------
+
+;; When writing performance sensitive code sometimes dealing with mutable
+;; arrays is unavoidable. ClojureScript provides a variety of functions for
+;; creating and manipulating JavaScript arrays.
+
+;; You can make an array of specific size with `make-array`
+
+(make-array 32)
+
+;; You can access an element of a array with `aget`.
+
+(aget #js ["one" "two" "three"] 1)
+
+;; You can access nested arrays with `aget`.
+
+(aget #js [#js ["one" "two" "three"]] 0 1)
+
+;; You can set the contents of an array with aset.
+
+(def yucky-stuff #js [1 2 3])
+
+(aset yucky-stuff 1 4)
+
+yucky-stuff

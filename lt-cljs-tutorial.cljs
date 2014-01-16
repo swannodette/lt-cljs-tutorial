@@ -400,6 +400,15 @@ a-map
 (foo2 3 4)
 (foo2 3 4 5)
 
+;; Multiple arities can be used to supply default values.
+
+(defn defaults
+  ([x] (defaults x :default))
+  ([x y] [x y]))
+
+(defaults :explicit)
+(defaults :explicit1 :explicit2)
+
 ;; Functions support rest arguments.
 
 (defn foo3 [a b & d]

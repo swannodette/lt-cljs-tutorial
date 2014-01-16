@@ -417,7 +417,9 @@ a-map
 ;; ----------------------------------------------------------------------------
 
 ;; Often when you need some polymorphism and performance isn't an issue
-;; multimethods will suffice.
+;; multimethods will suffice. Multimethod are functions that allow open
+;; extension, but instead of limiting dispatch to type, dispatch is controlled
+;; by whatever value the dispatch fn originally supplied to defmulti returns.
 
 (defmulti parse (fn [[f & r :as form]] f))
 
@@ -467,6 +469,7 @@ some-x
 ;; proposed for ES6, but the system provided in ClojureScript benefits from
 ;; all the collections supporting uniform access.
 
+
 ;; Sequence destructuring
 ;; ----------------------------------------------------------------------------
 
@@ -501,7 +504,7 @@ some-x
 (let [{f :foo b :baz} {:foo "bar" :baz "woz"}]
   [f b])
 
-;; If we don't want to rename we can just use `:keys`
+;; If we don't want to rename we can just use `:keys`.
 
 (let [{:keys [first last]} {:first "Bob" :last "Smith"}]
   [first last])
@@ -510,15 +513,16 @@ some-x
 ;; Sequences
 ;; ============================================================================
 
-;; We said that ClojureScript data strutures are preferred as they provide a
+;; We said that ClojureScript data structures are preferred as they provide a
 ;; uniform interface. All ClojureScript collections satisfy the ISeqable
 ;; protocol, that means iteration is uniform for all collections.
+
 
 ;; Map / Filter / Reduce
 ;; ----------------------------------------------------------------------------
 
 ;; ClojureScript supports the same bells and whistles out of the box you may
-;; be familiar with from other funtional programming languages or JavaScript
+;; be familiar with from other functional programming languages or JavaScript
 ;; libraries such as Underscore.js
 
 (map inc [0 1 2 3 4 5 6 7 8 9])
@@ -540,7 +544,7 @@ some-x
 
 ;; ClojureScript supports list comprehensions you might know from various
 ;; languages. List comprehensions are sometimes more natural / readable
-;; then a series of map/filter operations.
+;; then a chain of map and filter operations.
 
 (for [x (range 1 10)
       y (range 1 10)]
@@ -568,6 +572,21 @@ some-x
 (seq [1 2 3 4 5])
 (seq '(1 2 3 4 5))
 
+;; Many ClojureScript functions will call `seq` on their arguments in order to
+;; provide the expected behavior.
+
+(first {:foo "bar" :baz "woz"})
+(rest {:foo "bar" :baz "woz"})
+
+(first #{:cat :dog :bird})
+(rest #{:cat :dog :bird})
+
+(first [1 2 3 4 5])
+(rest [1 2 3 4 5])
+
+(first '(1 2 3 4 5))
+(rest '(1 2 3 4 5))
+
 
 ;; Metadata
 ;; ============================================================================
@@ -576,8 +595,8 @@ some-x
 ;; is a useful way to annotate data without effecting equality. The
 ;; ClojureScript compiler uses this language feature to great effect.
 
-;; You can add meta data to ClojureScript collection with `with-meta`. The
-;; meta data must be a map.
+;; You can add meta data to a ClojureScript collection with `with-meta`. The
+;; metadata must be a map.
 
 (def plain-data [0 1 2 3 4 5 6 7 8 9])
 
@@ -587,7 +606,7 @@ some-x
 
 (= plain-data decorated-data)
 
-;; You can access meta with `meta`.
+;; You can access metadata with `meta`.
 
 (meta decorated-data)
 
@@ -595,18 +614,18 @@ some-x
 ;; Error Handling
 ;; ============================================================================
 
-;; Error handling in ClojureScript is relatively straight forward and more less
-;; similar to what is offered in JavaScript.
+;; Error handling in ClojureScript is relatively straight forward and more or
+;; less similar to what is offered in JavaScript.
 
-;; You can construct an error like this:
+;; You can construct an error like this.
 
 (js/Error. "Oops")
 
-;; You can throw an error like this:
+;; You can throw an error like this.
 
 (throw (js/Error. "Oops"))
 
-;; You can catch an error like this:
+;; You can catch an error like this.
 
 (try
   (throw (js/Error. "Oops"))

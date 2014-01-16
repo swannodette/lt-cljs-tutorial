@@ -347,7 +347,7 @@ a-map
   "An empty string is not false-y"
   "Yuck")
 
-;; The only false-y values in ClojureScript are `null` mand `false`. `undefined`
+;; The only false-y values in ClojureScript are `null` and `false`. `undefined`
 ;; is not really a valid ClojureScript value and is generally coerced to `null`.
 
 

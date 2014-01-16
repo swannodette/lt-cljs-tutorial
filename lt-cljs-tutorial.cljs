@@ -188,7 +188,9 @@ a-vector
 
 (nth ["foo" "bar" "baz"] 1)
 
-;; Surprisingly vectors can be treated as functions.
+;; Surprisingly vectors can be treated as functions. This is actually
+;; a very useful property for associative data structures to have as
+;; we'll see below with sets.
 
 (["foo" "bar" "baz"] 1)
 
@@ -290,6 +292,20 @@ a-map
 
 (contains? a-set :cat)
 
+;; Like vectors and maps, sets can also act as functions. If the argument
+;; exists in the set it will be returned, otherwise the set will return nil.
+
+(#{:cat :dog :bird} :cat)
+
+;; This is powerful when combined with conditionals.
+
+(defn check [x]
+  (if (#{:cat :dog :bird} x)
+    :valid
+    :invalid))
+
+(check :cat)
+(check :zebra)
 
 ;; Lists
 ;; ----------------------------------------------------------------------------

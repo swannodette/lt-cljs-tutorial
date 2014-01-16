@@ -667,7 +667,8 @@ some-x
 ;; environment, first class namespaces, and Java numerics.
 
 ;; Here are some highlights and patterns that newcomers to ClojureScript might
-;; find useful.
+;; find useful. Remember you can type Control-Shift-D at anytime to bring up
+;; the documentation panel to see what any of these function do.
 
 (apply str (interpose ", " ["Bob" "Mary" "George"]))
 

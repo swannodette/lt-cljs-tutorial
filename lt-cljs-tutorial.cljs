@@ -808,6 +808,8 @@ yucky-stuff
 ;; Sometimes a map will simply not suffice, in these cases you will want to
 ;; make your own custom type.
 
+;; It's idiomatic to use CamelCase to name a deftype.
+
 (deftype Foo [a b])
 
 ;; You can instantiate a deftype instance using the same constructor pattern
@@ -856,6 +858,8 @@ yucky-stuff
 ;; have a domain object that acts more or less like a map. This is what
 ;; defrecord is for.
 
+;; Like for deftype, it's idiomatic to use CamelCase to name a defrecord.
+
 (defrecord Person [first last])
 
 ;; You can construct an instance in the usual way.
@@ -868,10 +872,24 @@ yucky-stuff
 
 (map->Person {:first "Bob" :last "Smith"})
 
+;; It's considered idiomatic and even recommended to define a factory function
+;; which returns the created instance of a defrecord/deftype. It's idiomat to use
+;; dash-case for factories names.
+
+(defn person [first last]
+  (->Person first last))
+
 ;; records work like maps
 
-(seq (->Person "Bob" "Smith"))
+(seq (person "Bob" "Smith"))
 
-(:first (->Person "Bob" "Smith"))
+(:first (person "Bob" "Smith"))
 
-(keys (->Person "Bob" "Smith"))
+(keys (person "Bob" "Smith"))
+
+(vals (person "Bob" "Smith"))
+
+;; both deftype and defrecord are open to dynamic extensions (i.e. open class)
+
+(keys (assoc (person "Bob" "Smith") :age 18))
+

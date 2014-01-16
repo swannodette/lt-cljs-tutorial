@@ -818,11 +818,14 @@ some-x
 
 (.-a (Foo. 1 2))
 
-;; You can implement protocol methods on a deftype.
+;; You can implement protocol methods on a deftype. Note that the first
+;; argument to any deftype or defrecord method is the instance itself.
+;; The dash in `-count` has no special meaning. It's just a convention for
+;; the core ClojureScript protocols. You need not adopt it.
 
 (deftype Foo [a b]
   ICounted
-  (-count [_] 2))
+  (-count [this] 2))
 
 (count (Foo. 1 2))
 
@@ -830,7 +833,7 @@ some-x
 
 (deftype Foo [a b]
   Object
-  (toString [_] (str a ", " b)))
+  (toString [this] (str a ", " b)))
 
 (.toString (Foo. 1 2))
 
@@ -838,13 +841,13 @@ some-x
 
 ;; (deftype Foo [a ^:mutable b]
 ;;   Object
-;;   (setA [_ val] (set! a val)))
+;;   (setA [this val] (set! a val)))
 
 ;; The following will compile.
 
 (deftype Foo [a ^:mutable b]
   Object
-  (setB [_ val] (set! b val)))
+  (setB [this val] (set! b val)))
 
 
 ;; defrecord

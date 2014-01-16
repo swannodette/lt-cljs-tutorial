@@ -473,7 +473,7 @@ some-x
 ;; Sequence destructuring
 ;; ----------------------------------------------------------------------------
 
-;; Destructuring sequential types is particular useful
+;; Destructuring sequential types is particular useful.
 
 (let [[f & r] '(1 2 3)]
   f)

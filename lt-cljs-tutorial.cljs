@@ -6,8 +6,8 @@
 ;; Basics
 ;; ============================================================================
 
-;; To begin open the command pane (Control-SPACE), and Add a Light Table UI
-;; connection. Once connected you can evaluate all the forms in this file
+;; To begin open the command pane (type Control-SPACE), Add Connection, select
+;; Light Table UI. Once connected you can evaluate all the forms in this file
 ;; by placing the cursor after the form and typing Command-ENTER.
 
 
@@ -815,9 +815,9 @@ yucky-stuff
 
 ;; deftype field are immutable unless specified. The following will not compile.
 
-(deftype Foo [a ^:mutable b]
-  Object
-  (setA [_ val] (set! a val)))
+;; (deftype Foo [a ^:mutable b]
+;;   Object
+;;   (setA [_ val] (set! a val)))
 
 ;; The following will compile.
 

@@ -709,7 +709,7 @@ some-x
 (get {:foo "bar"} :foo)
 (get [:cat :bird :dog] 1)
 
-;; Map destructing actually desugar into `get` calls. That means if you extend
+;; Map destructing actually desugars into `get` calls. That means if you extend
 ;; your type to ILookup it will also support map destructuring!
 
 
@@ -722,7 +722,7 @@ some-x
 
 (defprotocol MyProtocol (awesome [this]))
 
-;; Now imagine we want to JavaScript strings to participate. We can do this
+;; Now imagine we want JavaScript strings to participate. We can do this
 ;; simply.
 
 (extend-type string

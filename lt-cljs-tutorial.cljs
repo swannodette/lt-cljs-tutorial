@@ -430,6 +430,9 @@ a-map
 ;; extension, but instead of limiting dispatch to type, dispatch is controlled
 ;; by whatever value the dispatch fn originally supplied to defmulti returns.
 
+;; Here is a function that takes a list. It dispatches on the first element
+;; of the list!
+
 (defmulti parse (fn [[f & r :as form]] f))
 
 (defmethod parse 'if

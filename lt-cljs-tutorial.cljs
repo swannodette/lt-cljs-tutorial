@@ -610,7 +610,7 @@ some-x
 ;; is a useful way to annotate data without affecting equality. The
 ;; ClojureScript compiler uses this language feature to great effect.
 
-;; You can add meta data to a ClojureScript collection with `with-meta`. The
+;; You can add meta datato a ClojureScript collection with `with-meta`. The
 ;; metadata must be a map.
 
 (def plain-data [0 1 2 3 4 5 6 7 8 9])
@@ -645,6 +645,14 @@ some-x
 (try
   (throw (js/Error. "Oops"))
   (catch js/Error e
+    e))
+
+;; JavaScript unfortunately allows you to throw anything. You can handle
+;; this in ClojureScript with the following.
+
+(try
+  (throw (js/Error. "Oops"))
+  (catch :default e
     e))
 
 

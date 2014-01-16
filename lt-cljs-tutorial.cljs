@@ -369,7 +369,7 @@ a-map
 ;; The most primitive looping construct in ClojureScript is loop/recur. Most
 ;; of the iteration constructs are defined in terms of it. Using loop/recur is
 ;; usually considered bad style if a reasonable functional solution via
-;; map/filter/reduce is possible.
+;; map/filter/reduce or a list comprehension is possible.
 
 (loop [i 0 ret []]
   (if (< i 10)

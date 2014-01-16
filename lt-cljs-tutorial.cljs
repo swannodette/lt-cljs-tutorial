@@ -341,14 +341,14 @@ a-map
   "Zero is not false-y"
   "Yuck")
 
-;; Nor is the empy string.
+;; Nor is the empty string.
 
 (if ""
   "An empty string is not false-y"
   "Yuck")
 
-;; The only false-y values in ClojureScript are `null `and `false`. `undefined`
-;; is not really a valid ClojureScript value and is generaly coerced to `null`.
+;; The only false-y values in ClojureScript are `null` and `false`. `undefined`
+;; is not really a valid ClojureScript value and is generally coerced to `null`.
 
 
 ;; cond
@@ -417,7 +417,7 @@ a-map
 ;; ----------------------------------------------------------------------------
 
 ;; Often when you need some polymorphism and performance isn't an issue
-;; multimethods will suffice. Multimethod are functions that allow open
+;; multimethods will suffice. Multimethods are functions that allow open
 ;; extension, but instead of limiting dispatch to type, dispatch is controlled
 ;; by whatever value the dispatch fn originally supplied to defmulti returns.
 
@@ -460,7 +460,7 @@ some-x
 ;; Destructuring
 ;; ============================================================================
 
-;; In any serious ClojureScript program there will be signifiant amounts of
+;; In any serious ClojureScript program there will be significant amounts of
 ;; data manipulation. Again we will see that ClojureScript's uniformity
 ;; pays off.
 
@@ -515,7 +515,7 @@ some-x
 
 ;; We said that ClojureScript data structures are preferred as they provide a
 ;; uniform interface. All ClojureScript collections satisfy the ISeqable
-;; protocol, that means iteration is uniform for all collections.
+;; protocol, which means iteration is uniform for all collections.
 
 
 ;; Map / Filter / Reduce
@@ -544,7 +544,7 @@ some-x
 
 ;; ClojureScript supports list comprehensions you might know from various
 ;; languages. List comprehensions are sometimes more natural / readable
-;; then a chain of map and filter operations.
+;; than a chain of map and filter operations.
 
 (for [x (range 1 10)
       y (range 1 10)]
@@ -592,7 +592,7 @@ some-x
 ;; ============================================================================
 
 ;; All of the ClojureScript standard collections support metadata. Metadata
-;; is a useful way to annotate data without effecting equality. The
+;; is a useful way to annotate data without affecting equality. The
 ;; ClojureScript compiler uses this language feature to great effect.
 
 ;; You can add meta data to a ClojureScript collection with `with-meta`. The
@@ -614,7 +614,7 @@ some-x
 ;; Error Handling
 ;; ============================================================================
 
-;; Error handling in ClojureScript is relatively straight forward and more or
+;; Error handling in ClojureScript is relatively straightforward and more or
 ;; less similar to what is offered in JavaScript.
 
 ;; You can construct an error like this.

@@ -269,6 +269,27 @@ a-map
 (get complex-map [3 4])
 
 
+;; Keyword digression
+;; ----------------------------------------------------------------------------
+
+;; Let's take a moment to digress about keywords as they are so ubiquitous
+;; in ClojureScript code.
+
+(identity :foo)
+
+;; If you add an additional preceding colon you'll get namespaced keyword.
+
+(identity ::foo)
+
+;; What good is this for? It allows you to put data into collections without
+;; fear of namespace clashes without the tedium of manual namespacing them
+;; in your source.
+
+(identity {:user/foo ::foo})
+
+;; Namespaced keywords are essential to Light Table's modularity.
+
+
 ;; Sets
 ;; ----------------------------------------------------------------------------
 

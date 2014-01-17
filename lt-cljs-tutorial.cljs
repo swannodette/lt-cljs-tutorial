@@ -873,8 +873,8 @@ yucky-stuff
 (map->Person {:first "Bob" :last "Smith"})
 
 ;; It's considered idiomatic and even recommended to define a factory function
-;; which returns the created instance of a defrecord/deftype. It's idiomat to use
-;; dash-case for factories names.
+;; which returns the created instance of a defrecord/deftype. It's idiomatic to
+;; use dash-case for factories names.
 
 (defn person [first last]
   (->Person first last))
@@ -892,4 +892,109 @@ yucky-stuff
 ;; both deftype and defrecord are open to dynamic extensions (i.e. open class)
 
 (keys (assoc (person "Bob" "Smith") :age 18))
+
+;; Deftypes, Records & Protocols
+;; ----------------------------------------------------------------------------
+
+;; deftype and defrecord can implement protocols
+
+(extend-type Person
+  MyProtocol
+  (awesome [this]
+           (str (:first this) " " (:last this))))
+
+(awesome (person "Bob" "Smith"))
+
+;; It's idiomatic to use 'this' as the name of the first arg of a method. This arg
+;; is the one used to polymorfically select the appropriated method implementation
+;; on the basis of its type.
+;; If you need a more sofisticated form of polymorfism you have to use defmulti.
+
+;; When you mix types/records with protocols you are modeling the world with an
+;; an object oriented approach, which sometimes is needed. CLJS does not offer a
+;; direct form of inheritance, but almost all the forms of reuse by inherintance
+;; are considered a bad design in the OO communities from decades.
+;; Reuse by composition is instead directly available in the language.
+
+(defrecord Contact [person email])
+
+(defn contact [first last email]
+  (->Contact (person first last) email))
+
+(contact "Bob" "Smith" "bob.smith@acme.com")
+
+;; To modify the fields of nested records you use the assoc-in, like with maps.
+
+(assoc-in (contact "Bob" "Smith" "bob.smith@acme.com")
+          [:person :first] "Robert")
+
+;; It you need to use the previous value of a field for calculating the new one,
+;; you can use the update-in funtion, like with maps.
+
+(update-in (contact "Bob" "Smith" "bob.smith@acme.com")
+           [:person :last] #(string/replace %1 #"bob" %2) "robert")
+
+;; The main difference with the majority of OOP languages is that your instances
+;; of types/records are immutable.
+
+(def bob (contact "Bob" "Smith" "bob.smith@acme.com"))
+
+(update-in bob [:person :last] #(string/replace %1 #"bob" %2) "robert")
+
+bob
+
+;; Atoms
+;; ----------------------------------------------------------------------------
+
+;; If you really need mutable object you can opt for using the 'atom' reference
+;; type. The concept of 'atom' is very simple to be grasped and used.
+
+;; An atom is a container that hold a value.
+
+(def an-atom (atom 0))
+
+;; If you want to get the current value of an atom, you need to deref it.
+
+(deref an-atom)
+
+;; The deref function is used so often that there is syntax shortcut for it.
+
+@an-atom
+
+;; If you want to change the value of an atom, you can use the 'swap!' function
+
+(swap! an-atom inc)
+
+@atom
+
+;; Here we call the inc function by passing to it the current value of the
+;; atom. The swap! function returns the new value of the atom.
+
+
+;; You can reset! the atom to a new value not depending on the old one. As swap!
+;; does, reset! retunrn the new value.
+
+(reset! an-atom 2)
+
+@an-atom
+
+;; CLJS atoms have some interesting features from a performance point of view:
+;; * a reader never blocks other readers;
+;; * a writer never blocks readers.
+
+;; CLJS has mutability too!
+
+;; If you need to pass a function that accept more the one argument, you can
+;; pass them to swap! too.
+
+
+;; The first argument of the anonynous function is the current state of the atom.
+
+(swap! an-atom #(+ %1 %2) 20)
+
+;; You can reset! and atom to a new state
+
+(reset! an-atom 0)
+
+@an-atom
 

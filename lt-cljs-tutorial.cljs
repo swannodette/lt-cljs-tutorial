@@ -907,55 +907,57 @@ some-x
 
 (keys (assoc (person "Bob" "Smith") :age 18))
 
+
 ;; Records & Protocols
 ;; ----------------------------------------------------------------------------
 
-;; You can extend a defrecord to satisfy a protocol as you do with detype.
+;; You can extend a defrecord to satisfy a protocol as you do with deftype.
+
 (extend-type Person
   MyProtocol
   (awesome [this]
-           (str (:last this) ", " (:first this))))
+    (str (:last this) ", " (:first this))))
 
 (awesome (person "Bob" "Smith"))
 
 (satisfies? MyProtocol (person "Bob" "Smith"))
 
-;; or you can extend a protocol to a defrecord
+;; Or you can extend a protocol to a defrecord.
 
 (extend-protocol MyProtocol
   Person
   (awesome [this]
-           (str (:last this) ", " (:first this))))
+    (str (:last this) ", " (:first this))))
 
 (awesome (person "Bob" "Smith"))
 
 (satisfies? MyProtocol (person "Bob" "Smith"))
 
-;; If you need a more sofisticated form of polymorfism you have to use defmulti.
+;; If you need a more sophisticated form of polymorphism you have to use defmulti.
 
 ;; If you mix types/records with protocols you are modeling your problem with an
-;; object oriented approach, which sometimes is needed. CLJS does not offer a
-;; direct form of inheritance, but almost all forms of reuse/extension by
-;; inherintance are considered from decades a bad design in the OO communities.
-;; Instead, reuse/extension by composition is directly available in the language.
+;; object oriented approach, which is sometimes useful. ClojureScript does not
+;; offer a direct form of inheritance. Instead, reuse/extension by composition
+;; is encouraged. It's best to avoid deftype/defrecord and model your problem
+;; with plain maps. You can easily switch to records later down the line.
 
 (defrecord Contact [person email])
 
-;; Even if it's not required, remember to define a factory function to create instances
-;; of the new Contact record type by internally calling the factory fuction for the
-;; Person record type.
+;; Even if it's not required, remember to define a factory function to create
+;; instances of the new Contact record type by internally calling the factory
+;; function for the Person record type.
 
 (defn contact [first last email]
   (->Contact (person first last) email))
 
 (contact "Bob" "Smith" "bob.smith@acme.com")
 
-;; And extend the protocol/defrecord as well
+;; And extend the protocol/defrecord as well.
 
 (extend-protocol MyProtocol
   Contact
   (awesome [this]
-           (str (awesome (:person this)) ", " (:email this))))
+    (str (awesome (:person this)) ", " (:email this))))
 
 (awesome (contact "Bob" "Smith" "bob.smith@acme.com"))
 
@@ -980,6 +982,7 @@ some-x
 (get-in bob [:person :first])
 
 ;; If you really need mutability, you can opt for using atoms.
+
 
 ;; Atoms
 ;; ============================================================================

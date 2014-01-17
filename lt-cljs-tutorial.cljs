@@ -933,10 +933,15 @@ x
 (.toString (Foo. 1 2))
 
 ;; deftype field are immutable unless specified. The following will not compile.
+;; (To prove it to yourself, highlight and evaluate the `deftype` form below.)
 
-;; (deftype Foo [a ^:mutable b]
-;;   Object
-;;   (setA [this val] (set! a val)))
+(comment
+
+  (deftype Foo [a ^:mutable b]
+    Object
+    (setA [this val] (set! a val)))
+
+  )
 
 ;; The following will compile.
 

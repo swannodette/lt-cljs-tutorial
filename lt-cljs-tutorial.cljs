@@ -715,7 +715,9 @@ some-x
 
 (deref x)
 
-;; If you want to change the value of an atom you can use `reset!`.
+;; If you want to change the value of an atom you can use `reset!` which returns
+;; the new value. It's idiomatic to add the bang char `!` at the end of function
+;; names mutating objects.
 
 (reset! x 2)
 
@@ -723,6 +725,43 @@ x
 
 @x
 
+;; swap!
+;; ------------------------------------------------------------------------------
+
+;; if you want to change the value of an atom on the basis of its current value
+;; you can use `swap!`. In its simplest form `swap!` accept as first argument
+;; the atom itself and as a second argument an updating function of one argument
+;; which will be instantiated with the current value of the atom. `swap!` returns
+;; the new value of the atom.
+
+(swap! x inc)
+
+x
+
+@x
+
+;; if your updating function needs extra arguments to calculate the new value, you
+;; have to pass them as extra arguments to `swap!` after the updating function
+;; itself.
+
+(swap! x (fn [old extra-arg]
+           (+ old extra-arg)) 39)
+
+x
+
+@x
+
+;; as usual when anonymous functions are simple enough it's idiomatic the usage
+;; of the condensed form.
+
+(swap! x #(- %1 %2) 42)
+
+x
+
+@x
+
+;; Note that the updating function has to be free of side-effects because a
+;; waiting writer could call it more than once in a spin loop.
 
 ;; set!
 ;; ----------------------------------------------------------------------------

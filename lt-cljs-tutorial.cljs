@@ -149,6 +149,9 @@ lt-cljs-tutorial/x
 
 js/requestAnimationFrame
 
+;; If you're curious about other JavaScrip interop jump to the bottom of this
+;; tutorial.
+
 
 ;; ClojureScript data types
 ;; ============================================================================
@@ -185,7 +188,9 @@ a-vector
 
 (nth ["foo" "bar" "baz"] 1)
 
-;; Surprisingly vectors can be treated as functions.
+;; Surprisingly vectors can be treated as functions. This is actually
+;; a very useful property for associative data structures to have as
+;; we'll see below with sets.
 
 (["foo" "bar" "baz"] 1)
 
@@ -287,6 +292,20 @@ a-map
 
 (contains? a-set :cat)
 
+;; Like vectors and maps, sets can also act as functions. If the argument
+;; exists in the set it will be returned, otherwise the set will return nil.
+
+(#{:cat :dog :bird} :cat)
+
+;; This is powerful when combined with conditionals.
+
+(defn check [x]
+  (if (#{:cat :dog :bird} x)
+    :valid
+    :invalid))
+
+(check :cat)
+(check :zebra)
 
 ;; Lists
 ;; ----------------------------------------------------------------------------
@@ -347,8 +366,8 @@ a-map
   "An empty string is not false-y"
   "Yuck")
 
-;; The only false-y values in ClojureScript are `null` and `false`. `undefined`
-;; is not really a valid ClojureScript value and is generally coerced to `null`.
+;; The only false-y values in ClojureScript are `nil` and `false`. `undefined`
+;; is not really a valid ClojureScript value and is generally coerced to `nil`.
 
 
 ;; cond
@@ -367,9 +386,9 @@ a-map
 ;; ----------------------------------------------------------------------------
 
 ;; The most primitive looping construct in ClojureScript is loop/recur. Most
-;; of the iteration constructs are defined in terms of it. Using loop/recur
-;; usually consider bad style if a reasonable functional solution via
-;; map/filter/reduce is possible.
+;; of the iteration constructs are defined in terms of it. Using loop/recur is
+;; usually considered bad style if a reasonable functional solution via
+;; map/filter/reduce or a list comprehension is possible.
 
 (loop [i 0 ret []]
   (if (< i 10)
@@ -400,6 +419,15 @@ a-map
 (foo2 3 4)
 (foo2 3 4 5)
 
+;; Multiple arities can be used to supply default values.
+
+(defn defaults
+  ([x] (defaults x :default))
+  ([x y] [x y]))
+
+(defaults :explicit)
+(defaults :explicit1 :explicit2)
+
 ;; Functions support rest arguments.
 
 (defn foo3 [a b & d]
@@ -420,6 +448,9 @@ a-map
 ;; multimethods will suffice. Multimethods are functions that allow open
 ;; extension, but instead of limiting dispatch to type, dispatch is controlled
 ;; by whatever value the dispatch fn originally supplied to defmulti returns.
+
+;; Here is a function that takes a list. It dispatches on the first element
+;; of the list!
 
 (defmulti parse (fn [[f & r :as form]] f))
 
@@ -485,6 +516,7 @@ some-x
   g)
 
 ;; _ is just a convention it has no special meaning.
+
 (let [[_ _ b] [255 255 150]]
   b)
 
@@ -493,6 +525,7 @@ some-x
 (defn green [[_ g _]] g)
 
 (green [255 255 150])
+
 
 ;; Map destructuring
 ;; ----------------------------------------------------------------------------
@@ -573,7 +606,8 @@ some-x
 (seq '(1 2 3 4 5))
 
 ;; Many ClojureScript functions will call `seq` on their arguments in order to
-;; provide the expected behavior.
+;; provide the expected behavior. The following demonstrates that you can
+;; uniformly iterate over all the ClojureScript collections!
 
 (first {:foo "bar" :baz "woz"})
 (rest {:foo "bar" :baz "woz"})
@@ -595,7 +629,7 @@ some-x
 ;; is a useful way to annotate data without affecting equality. The
 ;; ClojureScript compiler uses this language feature to great effect.
 
-;; You can add meta data to a ClojureScript collection with `with-meta`. The
+;; You can add meta datato a ClojureScript collection with `with-meta`. The
 ;; metadata must be a map.
 
 (def plain-data [0 1 2 3 4 5 6 7 8 9])
@@ -632,6 +666,14 @@ some-x
   (catch js/Error e
     e))
 
+;; JavaScript unfortunately allows you to throw anything. You can handle
+;; this in ClojureScript with the following.
+
+(try
+  (throw (js/Error. "Oops"))
+  (catch :default e
+    e))
+
 
 ;; The ClojureScript Standard Library
 ;; ============================================================================
@@ -641,7 +683,8 @@ some-x
 ;; environment, first class namespaces, and Java numerics.
 
 ;; Here are some highlights and patterns that newcomers to ClojureScript might
-;; find useful.
+;; find useful. Remember you can type Control-Shift-D at anytime to bring up
+;; the documentation panel to see what any of these function do.
 
 (apply str (interpose ", " ["Bob" "Mary" "George"]))
 
@@ -686,7 +729,7 @@ some-x
 (get {:foo "bar"} :foo)
 (get [:cat :bird :dog] 1)
 
-;; Map destructing actually desugar into `get` calls. That means if you extend
+;; Map destructing actually desugars into `get` calls. That means if you extend
 ;; your type to ILookup it will also support map destructuring!
 
 
@@ -699,7 +742,7 @@ some-x
 
 (defprotocol MyProtocol (awesome [this]))
 
-;; Now imagine we want to JavaScript strings to participate. We can do this
+;; Now imagine we want JavaScript strings to participate. We can do this
 ;; simply.
 
 (extend-type string
@@ -730,8 +773,8 @@ some-x
 ;; Sometimes it's useful to make an anonymous type which implements some
 ;; various protocols.
 
-;; For example say we want JavaScript object to support ILookup. No we don't
-;; to blindly `extend-type object`, that would pollute the behavior of plain
+;; For example say we want JavaScript object to support ILookup. Now we don't
+;; want to blindly `extend-type object`, that would pollute the behavior of plain
 ;; JavaScript objects for everyone.
 
 ;; Instead we can provide a helper function that takes an object and returns
@@ -771,34 +814,6 @@ some-x
 ;; ============================================================================
 
 
-;; Primitive Array Operations
-;; ============================================================================
-
-;; When writing performance sensitive code some times dealing with mutable
-;; arrays is unavoidable. ClojureScript provides a variety of functions for
-;; creating and manipulating JavaScript arrays.
-
-;; You can make an array of specific size with `make-array`
-
-(make-array 32)
-
-;; You can access an element of a array with `aget`.
-
-(aget #js ["one" "two" "three"] 1)
-
-;; You can access nested arrays with `aget`.
-
-(aget #js [#js ["one" "two" "three"]] 0 1)
-
-;; You can set the contents of an array with aset.
-
-(def yucky-stuff #js [1 2 3])
-
-(aset yucky-stuff 1 4)
-
-yucky-stuff
-
-
 ;; Types & Records
 ;; ============================================================================
 
@@ -808,12 +823,10 @@ yucky-stuff
 ;; Sometimes a map will simply not suffice, in these cases you will want to
 ;; make your own custom type.
 
-;; It's idiomatic to use CamelCase to name a deftype.
-
 (deftype Foo [a b])
 
-;; You can instantiate a deftype instance using the same constructor pattern
-;; we've already discussed.
+;; It's idiomatic to use CamelCase to name a deftype. You can instantiate a
+;; deftype instance using the same constructor pattern we've already discussed.
 
 (Foo. 1 2)
 
@@ -822,11 +835,14 @@ yucky-stuff
 
 (.-a (Foo. 1 2))
 
-;; You can implement protocol methods on a deftype.
+;; You can implement protocol methods on a deftype. Note that the first
+;; argument to any deftype or defrecord method is the instance itself.
+;; The dash in `-count` has no special meaning. It's just a convention for
+;; the core ClojureScript protocols. You need not adopt it.
 
 (deftype Foo [a b]
   ICounted
-  (-count [_] 2))
+  (-count [this] 2))
 
 (count (Foo. 1 2))
 
@@ -834,7 +850,7 @@ yucky-stuff
 
 (deftype Foo [a b]
   Object
-  (toString [_] (str a ", " b)))
+  (toString [this] (str a ", " b)))
 
 (.toString (Foo. 1 2))
 
@@ -842,13 +858,13 @@ yucky-stuff
 
 ;; (deftype Foo [a ^:mutable b]
 ;;   Object
-;;   (setA [_ val] (set! a val)))
+;;   (setA [this val] (set! a val)))
 
 ;; The following will compile.
 
 (deftype Foo [a ^:mutable b]
   Object
-  (setB [_ val] (set! b val)))
+  (setB [this val] (set! b val)))
 
 
 ;; defrecord
@@ -873,8 +889,8 @@ yucky-stuff
 (map->Person {:first "Bob" :last "Smith"})
 
 ;; It's considered idiomatic and even recommended to define a factory function
-;; which returns the created instance of a defrecord/deftype. It's idiomatic to
-;; use dash-case for factories names.
+;; which returns the created instance of a defrecord/deftype. It's idiomatic to use
+;; dash-case for factories names.
 
 (defn person [first last]
   (->Person first last))
@@ -998,3 +1014,58 @@ bob
 
 @an-atom
 
+
+;; JavaScript Interop
+;; ============================================================================
+
+;; Property Access
+;; ----------------------------------------------------------------------------
+
+(def a-date (js/Date.))
+
+;; You can access properties with the `.-` property access syntax.
+
+(.-getSeconds a-date)
+
+;; Method Calls
+;; ----------------------------------------------------------------------------
+
+;; Methods can be invoke with the `.` syntax.
+
+(.getSeconds a-date)
+
+;; The above desugars into the following.
+
+(. a-date (getSeconds))
+
+;; For example you can write a `console.log` call like so.
+
+(. js/console (log "Interop!"))
+
+
+;; Primitive Array Operations
+;; ----------------------------------------------------------------------------
+
+;; When writing performance sensitive code sometimes dealing with mutable
+;; arrays is unavoidable. ClojureScript provides a variety of functions for
+;; creating and manipulating JavaScript arrays.
+
+;; You can make an array of specific size with `make-array`
+
+(make-array 32)
+
+;; You can access an element of a array with `aget`.
+
+(aget #js ["one" "two" "three"] 1)
+
+;; You can access nested arrays with `aget`.
+
+(aget #js [#js ["one" "two" "three"]] 0 1)
+
+;; You can set the contents of an array with aset.
+
+(def yucky-stuff #js [1 2 3])
+
+(aset yucky-stuff 1 4)
+
+yucky-stuff

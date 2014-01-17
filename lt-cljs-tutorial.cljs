@@ -922,6 +922,9 @@ some-x
 
 (.-getSeconds a-date)
 
+;; Method Calls
+;; ----------------------------------------------------------------------------
+
 ;; Methods can be invoke with the `.` syntax.
 
 (.getSeconds a-date)

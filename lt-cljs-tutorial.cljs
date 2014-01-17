@@ -310,8 +310,8 @@ a-map
 ;; Lists
 ;; ----------------------------------------------------------------------------
 
-;; A less common Clojure data structure is lists. This may be surprising as
-;; Clojure is a Lisp, but maps, vectors and sets are the goto for most
+;; A less common ClojureScript data structure is lists. This may be surprising
+;; as ClojureScript is a Lisp, but maps, vectors and sets are the goto for most
 ;; applications. Still lists are sometimes useful.
 
 (def a-list '(:foo :bar :baz))
@@ -629,7 +629,7 @@ some-x
 ;; is a useful way to annotate data without affecting equality. The
 ;; ClojureScript compiler uses this language feature to great effect.
 
-;; You can add meta datato a ClojureScript collection with `with-meta`. The
+;; You can add meta data to a ClojureScript collection with `with-meta`. The
 ;; metadata must be a map.
 
 (def plain-data [0 1 2 3 4 5 6 7 8 9])
@@ -643,7 +643,6 @@ some-x
 ;; You can access metadata with `meta`.
 
 (meta decorated-data)
-
 
 ;; Error Handling
 ;; ============================================================================
@@ -866,7 +865,6 @@ some-x
   Object
   (setB [this val] (set! b val)))
 
-
 ;; defrecord
 ;; ----------------------------------------------------------------------------
 
@@ -908,6 +906,83 @@ some-x
 ;; both deftype and defrecord are open to dynamic extensions (i.e. open class)
 
 (keys (assoc (person "Bob" "Smith") :age 18))
+
+;; Records & Protocols
+;; ----------------------------------------------------------------------------
+
+;; You can extend a defrecord to satisfy a protocol as you do with detype.
+(extend-type Person
+  MyProtocol
+  (awesome [this]
+           (str (:last this) ", " (:first this))))
+
+(awesome (person "Bob" "Smith"))
+
+(satisfies? MyProtocol (person "Bob" "Smith"))
+
+;; or you can extend a protocol to a defrecord
+
+(extend-protocol MyProtocol
+  Person
+  (awesome [this]
+           (str (:last this) ", " (:first this))))
+
+(awesome (person "Bob" "Smith"))
+
+(satisfies? MyProtocol (person "Bob" "Smith"))
+
+;; If you need a more sofisticated form of polymorfism you have to use defmulti.
+
+;; If you mix types/records with protocols you are modeling your problem with an
+;; object oriented approach, which sometimes is needed. CLJS does not offer a
+;; direct form of inheritance, but almost all forms of reuse/extension by
+;; inherintance are considered from decades a bad design in the OO communities.
+;; Instead, reuse/extension by composition is directly available in the language.
+
+(defrecord Contact [person email])
+
+;; Even if it's not required, remember to define a factory function to create instances
+;; of the new Contact record type by internally calling the factory fuction for the
+;; Person record type.
+
+(defn contact [first last email]
+  (->Contact (person first last) email))
+
+(contact "Bob" "Smith" "bob.smith@acme.com")
+
+;; And extend the protocol/defrecord as well
+
+(extend-protocol MyProtocol
+  Contact
+  (awesome [this]
+           (str (awesome (:person this)) ", " (:email this))))
+
+(awesome (contact "Bob" "Smith" "bob.smith@acme.com"))
+
+;; To change the value of a nested key you use 'assoc-in', like with maps.
+
+(assoc-in (contact "Bob" "Smith" "bob.smith@acme.com")
+          [:person :first] "Robert")
+
+;; It you need to use the previous value of a nested field for calculating the
+;; new one, you can use 'update-in', like with maps.
+
+(update-in (contact "Bob" "Smith" "bob.smith@acme.com")
+           [:person :first] #(string/replace %1 #"Bob" %2) "Robert")
+
+;; As said, the main difference with the majority of OOP languages is that your
+;; instances of deftypes/defrecords are immutable.
+
+(def bob (contact "Bob" "Smith" "bob.smith@acme.com"))
+
+(update-in bob [:person :first] #(string/replace %1 #"Bob" %2) "Robert")
+
+(get-in bob [:person :first])
+
+;; If you really need mutability, you can opt for using atoms.
+
+;; Atoms
+;; ============================================================================
 
 
 ;; JavaScript Interop

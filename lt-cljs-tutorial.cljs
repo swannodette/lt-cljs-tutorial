@@ -310,8 +310,8 @@ a-map
 ;; Lists
 ;; ----------------------------------------------------------------------------
 
-;; A less common Clojure data structure is lists. This may be surprising as
-;; Clojure is a Lisp, but maps, vectors and sets are the goto for most
+;; A less common ClojureScript data structure is lists. This may be surprising
+;; as ClojureScript is a Lisp, but maps, vectors and sets are the goto for most
 ;; applications. Still lists are sometimes useful.
 
 (def a-list '(:foo :bar :baz))
@@ -629,7 +629,7 @@ some-x
 ;; is a useful way to annotate data without affecting equality. The
 ;; ClojureScript compiler uses this language feature to great effect.
 
-;; You can add meta datato a ClojureScript collection with `with-meta`. The
+;; You can add meta data to a ClojureScript collection with `with-meta`. The
 ;; metadata must be a map.
 
 (def plain-data [0 1 2 3 4 5 6 7 8 9])
@@ -643,7 +643,6 @@ some-x
 ;; You can access metadata with `meta`.
 
 (meta decorated-data)
-
 
 ;; Error Handling
 ;; ============================================================================
@@ -866,7 +865,6 @@ some-x
   Object
   (setB [this val] (set! b val)))
 
-
 ;; defrecord
 ;; ----------------------------------------------------------------------------
 
@@ -909,28 +907,27 @@ some-x
 
 (keys (assoc (person "Bob" "Smith") :age 18))
 
-;; Deftypes, Records & Protocols
+;; Records & Protocols
 ;; ----------------------------------------------------------------------------
 
-;; deftype and defrecord can implement protocols
+;; You can implement protocol methods on a defrecord as you do with detype.
+;; As said, the first argument to any deftype or defrecord method is the instance
+;; itself and it's idiomatic to name it 'this'.
 
 (extend-type Person
   MyProtocol
   (awesome [this]
-           (str (:first this) " " (:last this))))
+           (str (:last this) ", " (:first this))))
 
 (awesome (person "Bob" "Smith"))
 
-;; It's idiomatic to use 'this' as the name of the first arg of a method. This arg
-;; is the one used to polymorfically select the appropriated method implementation
-;; on the basis of its type.
 ;; If you need a more sofisticated form of polymorfism you have to use defmulti.
 
-;; When you mix types/records with protocols you are modeling the world with an
-;; an object oriented approach, which sometimes is needed. CLJS does not offer a
-;; direct form of inheritance, but almost all the forms of reuse by inherintance
-;; are considered a bad design in the OO communities from decades.
-;; Reuse by composition is instead directly available in the language.
+;; If you mix types/records with protocols you are modeling your problem with an
+;; object oriented approach, which sometimes is needed. CLJS does not offer a
+;; direct form of inheritance, but almost all forms of reuse/extension by
+;; inherintance are considered from decades a bad design in the OO communities.
+;; Instead, reuse/extension by composition is directly available in the language.
 
 (defrecord Contact [person email])
 
@@ -939,81 +936,25 @@ some-x
 
 (contact "Bob" "Smith" "bob.smith@acme.com")
 
-;; To modify the fields of nested records you use the assoc-in, like with maps.
+;; To change the value of a nested field you use 'assoc-in', like with maps.
 
 (assoc-in (contact "Bob" "Smith" "bob.smith@acme.com")
           [:person :first] "Robert")
 
-;; It you need to use the previous value of a field for calculating the new one,
-;; you can use the update-in funtion, like with maps.
+;; It you need to use the previous value of a nested field for calculating the
+;; new one, you can use 'update-in', like with maps.
 
 (update-in (contact "Bob" "Smith" "bob.smith@acme.com")
-           [:person :last] #(string/replace %1 #"bob" %2) "robert")
+           [:person :first] #(string/replace %1 #"Bob" %2) "Robert")
 
-;; The main difference with the majority of OOP languages is that your instances
-;; of types/records are immutable.
+;; As said, the main difference with the majority of OOP languages is that your
+;; instances of deftypes/defrecords are immutable.
 
 (def bob (contact "Bob" "Smith" "bob.smith@acme.com"))
 
-(update-in bob [:person :last] #(string/replace %1 #"bob" %2) "robert")
+(update-in bob [:person :first] #(string/replace %1 #"Bob" %2) "Robert")
 
-bob
-
-;; Atoms
-;; ----------------------------------------------------------------------------
-
-;; If you really need mutable object you can opt for using the 'atom' reference
-;; type. The concept of 'atom' is very simple to be grasped and used.
-
-;; An atom is a container that hold a value.
-
-(def an-atom (atom 0))
-
-;; If you want to get the current value of an atom, you need to deref it.
-
-(deref an-atom)
-
-;; The deref function is used so often that there is syntax shortcut for it.
-
-@an-atom
-
-;; If you want to change the value of an atom, you can use the 'swap!' function
-
-(swap! an-atom inc)
-
-@atom
-
-;; Here we call the inc function by passing to it the current value of the
-;; atom. The swap! function returns the new value of the atom.
-
-
-;; You can reset! the atom to a new value not depending on the old one. As swap!
-;; does, reset! retunrn the new value.
-
-(reset! an-atom 2)
-
-@an-atom
-
-;; CLJS atoms have some interesting features from a performance point of view:
-;; * a reader never blocks other readers;
-;; * a writer never blocks readers.
-
-;; CLJS has mutability too!
-
-;; If you need to pass a function that accept more the one argument, you can
-;; pass them to swap! too.
-
-
-;; The first argument of the anonynous function is the current state of the atom.
-
-(swap! an-atom #(+ %1 %2) 20)
-
-;; You can reset! and atom to a new state
-
-(reset! an-atom 0)
-
-@an-atom
-
+(get-in bob [:person :first])
 
 ;; JavaScript Interop
 ;; ============================================================================

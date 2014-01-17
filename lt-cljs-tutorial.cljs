@@ -920,7 +920,7 @@ some-x
 
 (satisfies? MyProtocol (person "Bob" "Smith"))
 
-;; or you can extend a protocol to defrecord
+;; or you can extend a protocol to a defrecord
 
 (extend-protocol MyProtocol
   Person
@@ -941,10 +941,16 @@ some-x
 
 (defrecord Contact [person email])
 
+;; Even if it's not required, remember to define a factory function to create instances
+;; of the new Contact record type by internally calling the factory fuction for the
+;; Person record type.
+
 (defn contact [first last email]
   (->Contact (person first last) email))
 
 (contact "Bob" "Smith" "bob.smith@acme.com")
+
+;; And extend the protocol/defrecord as well
 
 (extend-protocol MyProtocol
   Contact
@@ -972,6 +978,12 @@ some-x
 (update-in bob [:person :first] #(string/replace %1 #"Bob" %2) "Robert")
 
 (get-in bob [:person :first])
+
+;; If you really need mutability, you can opt for using atoms.
+
+;; Atoms
+;; ============================================================================
+
 
 ;; JavaScript Interop
 ;; ============================================================================

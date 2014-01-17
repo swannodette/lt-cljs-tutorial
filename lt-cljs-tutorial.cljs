@@ -38,7 +38,7 @@
 ;; by preceding a line with a semi-colon, just like the lines you are reading
 ;; now.
 
-;; The second way is by proceding a form with `#_`. This causes ClojureScript
+;; The second way is by preceding a form with `#_`. This causes ClojureScript
 ;; to skip the evaluation of only the form immediately following, without
 ;; affecting the evaluation of the surrounding forms.
 

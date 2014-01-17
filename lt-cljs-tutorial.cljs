@@ -910,16 +910,26 @@ some-x
 ;; Records & Protocols
 ;; ----------------------------------------------------------------------------
 
-;; You can implement protocol methods on a defrecord as you do with detype.
-;; As said, the first argument to any deftype or defrecord method is the instance
-;; itself and it's idiomatic to name it 'this'.
-
+;; You can extend a defrecord to satisfy a protocol as you do with detype.
 (extend-type Person
   MyProtocol
   (awesome [this]
            (str (:last this) ", " (:first this))))
 
 (awesome (person "Bob" "Smith"))
+
+(satisfies? MyProtocol (person "Bob" "Smith"))
+
+;; or you can extend a protocol to defrecord
+
+(extend-protocol MyProtocol
+  Person
+  (awesome [this]
+           (str (:last this) ", " (:first this))))
+
+(awesome (person "Bob" "Smith"))
+
+(satisfies? MyProtocol (person "Bob" "Smith"))
 
 ;; If you need a more sofisticated form of polymorfism you have to use defmulti.
 
@@ -936,7 +946,14 @@ some-x
 
 (contact "Bob" "Smith" "bob.smith@acme.com")
 
-;; To change the value of a nested field you use 'assoc-in', like with maps.
+(extend-protocol MyProtocol
+  Contact
+  (awesome [this]
+           (str (awesome (:person this)) ", " (:email this))))
+
+(awesome (contact "Bob" "Smith" "bob.smith@acme.com"))
+
+;; To change the value of a nested key you use 'assoc-in', like with maps.
 
 (assoc-in (contact "Bob" "Smith" "bob.smith@acme.com")
           [:person :first] "Robert")

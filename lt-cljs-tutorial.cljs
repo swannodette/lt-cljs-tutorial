@@ -674,6 +674,50 @@ some-x
     e))
 
 
+;; Mutation
+;; ============================================================================
+
+;; Atoms
+;; ----------------------------------------------------------------------------
+
+;; A little bit of mutability goes a long way. ClojureScript does not offer
+;; any traditional mutable data structures, however it does support identities
+;; that can evolve over time via atom.
+
+(def x (atom 1))
+
+;; You can dereference the value of an atom with `@`.
+
+@x
+
+;; This is equivalent to calling `deref`.
+
+(deref x)
+
+;; If you want to change the value of an atom you can use `reset!`.
+
+(reset! x 2)
+
+x
+
+@x
+
+
+;; set!
+;; ----------------------------------------------------------------------------
+
+;; Sometimes you need to mutate existing JavaScript objects. For this you
+;; have `set!`.
+
+(def c (.createElement js/document "canvas"))
+(def ctxt (.getContext c "2d"))
+
+;; We can use property access with `set!` to change the fill color of a
+;; a canvas rendering context.
+
+(set! (.-fillColor ctxt) "#ffffff")
+
+
 ;; The ClojureScript Standard Library
 ;; ============================================================================
 
@@ -933,13 +977,15 @@ some-x
 
 (satisfies? MyProtocol (person "Bob" "Smith"))
 
-;; If you need a more sophisticated form of polymorphism you have to use defmulti.
+;; If you need a more sophisticated form of polymorphism consider multimethods.
 
 ;; If you mix types/records with protocols you are modeling your problem with an
-;; object oriented approach, which is sometimes useful. ClojureScript does not
-;; offer a direct form of inheritance. Instead, reuse/extension by composition
-;; is encouraged. It's best to avoid deftype/defrecord and model your problem
-;; with plain maps. You can easily switch to records later down the line.
+;; object oriented approach, which is sometimes useful.
+
+;; Note ClojureScript does not offer a direct form of inheritance. Instead,
+;; reuse/extension by composition is encouraged. It's best to avoid
+;; deftype/defrecord and model your problem with plain maps. You can easily
+;; switch to records later down the line.
 
 (defrecord Contact [person email])
 
@@ -972,7 +1018,7 @@ some-x
 (update-in (contact "Bob" "Smith" "bob.smith@acme.com")
            [:person :first] #(string/replace %1 #"Bob" %2) "Robert")
 
-;; As said, the main difference with the majority of OOP languages is that your
+;; As said, the main difference with the majority of OO languages is that your
 ;; instances of deftypes/defrecords are immutable.
 
 (def bob (contact "Bob" "Smith" "bob.smith@acme.com"))
@@ -980,12 +1026,6 @@ some-x
 (update-in bob [:person :first] #(string/replace %1 #"Bob" %2) "Robert")
 
 (get-in bob [:person :first])
-
-;; If you really need mutability, you can opt for using atoms.
-
-
-;; Atoms
-;; ============================================================================
 
 
 ;; JavaScript Interop

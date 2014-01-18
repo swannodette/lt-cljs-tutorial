@@ -536,12 +536,15 @@ some-x
 (let [[r g b] [255 255 150]]
   g)
 
-;; _ is just a convention it has no special meaning.
+;; _ is just a convention for saying that you are not interested at the
+;; item in the corresponding position. it has no other special meaning.
+;; Here we're only interested at the third local variable named `b`.
 
 (let [[_ _ b] [255 255 150]]
   b)
 
-;; destructuring function arguments works just as well.
+;; destructuring function arguments works just as well. Here we are
+;; only intersted at the second argument `g`.
 
 (defn green [[_ g _]] g)
 
@@ -563,13 +566,32 @@ some-x
 (let [{:keys [first last]} {:first "Bob" :last "Smith"}]
   [first last])
 
+;; the above map destructuring form is very useful when you need to
+;; define a function with optional, non positional and defaulted
+;; arguments.
 
+(defn magic [& {:keys [k g h]
+                :or {k 1
+                     g 2
+                     h 3}}]
+  (hash-map :k k 
+            :g g
+            :h h))
+
+(magic)
+(magic :k 10)
+(magic :g 100)
+(magic :h 1000)
+(magic :k 10 :g 100 :h 1000)
+(magic :h 1000 :k 10 :g 100)
+ 
 ;; Sequences
 ;; ============================================================================
 
-;; We said that ClojureScript data structures are preferred as they provide a
-;; uniform interface. All ClojureScript collections satisfy the ISeqable
-;; protocol, which means iteration is uniform for all collections.
+;; We said that ClojureScript data structures are preferred as they
+;; provide a uniform interface. All ClojureScript collections satisfy
+;; the ISeqable protocol, which means iteration is uniform
+;; (i.e. polymorphic) for all collection types.
 
 
 ;; Map / Filter / Reduce
@@ -591,7 +613,6 @@ some-x
 (map #(* % %) (filter even? (range 20)))
 
 (reduce + (range 100))
-
 
 ;; List comprehensions
 ;; ----------------------------------------------------------------------------
@@ -1026,7 +1047,7 @@ x
 
 (satisfies? MyProtocol (person "Bob" "Smith"))
 
-;; Or you can extend a protocol to a defrecord.
+;; Or you can extend a protocol on a defrecord.
 
 (extend-protocol MyProtocol
   Person
@@ -1058,7 +1079,7 @@ x
 
 (contact "Bob" "Smith" "bob.smith@acme.com")
 
-;; And extend the protocol/defrecord as well.
+;; And extend the protocol on defrecord as well.
 
 (extend-protocol MyProtocol
   Contact

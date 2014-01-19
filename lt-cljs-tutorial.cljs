@@ -10,6 +10,8 @@
 ;; Light Table UI. Once connected you can evaluate all the forms in this file
 ;; by placing the cursor after the form and typing Command-ENTER.
 
+;; IMPORTANT: You must evaluate the very first form, the namespace definition.
+
 
 ;; Declaring a namespaces
 ;; ----------------------------------------------------------------------------

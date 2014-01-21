@@ -1036,7 +1036,7 @@ x
 
 ;; As said while learning about `let` special form, when we're not
 ;; interested in the value of an argument it's idiomatic to use the
-;; underscore a sa placeholder as above.
+;; underscore as a placeholder like above.
 
 (awesome "Is this awesome?")
 

@@ -277,7 +277,7 @@ another-vector
 ;; of strings. They are more distinguishable from the rest of the
 ;; code, more efficient than plain strings and they can be used in
 ;; function position (i.e. first position after the open parens), as
-;; we'll se in a moment.
+;; we'll see in a moment.
 
 (def a-map {:foo "bar" :baz "woz"})
 

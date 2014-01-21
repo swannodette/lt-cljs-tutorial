@@ -291,7 +291,7 @@ another-vector
 
 (def another-map (assoc a-map :noz "goz"))
 
-;; Again a-map is unchanged! Some magic as before for vectors
+;; Again a-map is unchanged! Same magic as before for vectors
 
 a-map
 
@@ -422,12 +422,13 @@ a-map
 ;; Lists
 ;; ----------------------------------------------------------------------------
 
-;; A less common ClojureScript data structure is lists. This may be surprising
-;; as ClojureScript is a Lisp, but maps, vectors and sets are the goto for most
-;; applications. Still lists are sometimes useful.
+;; A less common ClojureScript data structure is lists. This may be
+;; surprising as ClojureScript is a Lisp, but maps, vectors and sets
+;; are the goto for most applications. Still lists are sometimes
+;; useful, expecially when you have to deal with code itself as it
+;; happens with macro.
 
 (def a-list '(:foo :bar :baz))
-
 
 ;; Equality
 ;; ============================================================================
@@ -900,7 +901,6 @@ x
 ;; Here are some highlights and patterns that newcomers to ClojureScript might
 ;; find useful. Remember you can type Control-Shift-D at anytime to bring up
 ;; the documentation panel to see what any of these function do.
-;; find useful.
 
 (apply str (interpose ", " ["Bob" "Mary" "George"]))
 

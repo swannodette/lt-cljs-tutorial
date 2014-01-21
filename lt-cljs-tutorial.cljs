@@ -102,7 +102,6 @@ lt-cljs-tutorial/x
 
 (z)
 
-
 ;; Literal data types
 ;; ----------------------------------------------------------------------------
 
@@ -133,12 +132,17 @@ lt-cljs-tutorial/x
 
 ;; You should not abuse the function literal notation as it degrades readability
 ;; outside of simple cases. It is nice for simple functional cases such as
-;; the following.
+;; the following. 
 
 (map (fn [n] (* n 2)) [1 2 3 4 5])
 
+;; more on vector literals and map function later
+
 (map #(* % 2) [1 2 3 4 5])
 
+;; Did you note that we passed an anonymous function as first argument
+;; of the `map` function? Nothing new for a JavaScript programmer
+;; JavaScript got some inspiration from the Lisp land.
 
 ;; JavaScript data type literals
 ;; ----------------------------------------------------------------------------
@@ -253,9 +257,9 @@ another-vector
 (get a-vector -1 :out-of-bounds)
 (get a-vector (count a-vector) :out-of-bounds)
 
-;; Surprisingly vectors can be treated as
-;; functions. This is actually a very useful property for associative
-;; data structures to have as we'll see below with sets.
+;; Surprisingly vectors can be treated as functions. This is actually
+;; a very useful property for associative data structures to have as
+;; we'll see below with sets.
 
 (a-vector 1)
 
@@ -270,8 +274,10 @@ another-vector
 
 ;; Let's define a simple map. Note `:foo` is a ClojureScript keyword.
 ;; ClojureScript programmers prefers to use keywords for keys instead
-;; of strings. They are both more distinguishable from the rest and
-;; more efficient than plain string.
+;; of strings. They are more distinguishable from the rest of the
+;; code, more efficient than plain strings and they can be used in
+;; function position (i.e. first position after the open parens), as
+;; we'll se in a moment.
 
 (def a-map {:foo "bar" :baz "woz"})
 
@@ -338,11 +344,10 @@ a-map
 (get-in a-nested-map [:preferences :nickname])
 (get-in a-nested-map [:services :alerts :daily])
 
-;; or just find a top level key-value pair (i.e. Mapentry) by key
+;; or just find a top level key-value pair (i.e. MapEntry) by key
 
 (find a-nested-map :customer-id)
 (find a-nested-map :services)
-
 
 ;; There are many cool ways to create maps.
 
@@ -378,8 +383,6 @@ a-map
 ;; in your source.
 
 (identity {:user/foo ::foo})
-
-;; Namespaced keywords are essential to Light Table's modularity.
 
 ;; Sets
 ;; ----------------------------------------------------------------------------
@@ -425,10 +428,42 @@ a-map
 ;; A less common ClojureScript data structure is lists. This may be
 ;; surprising as ClojureScript is a Lisp, but maps, vectors and sets
 ;; are the goto for most applications. Still lists are sometimes
-;; useful, expecially when you have to deal with code itself as it
-;; happens with macro.
+;; useful, expecially when dealing with code (i.e. code is data).
 
 (def a-list '(:foo :bar :baz))
+
+;; `conj` is "polymorphic" on lists as well and it's smart enough to
+;; add the new item in the most efficient way on the basis of the
+;; collection type.
+
+(conj a-list :front)  
+
+;; and lists are immutable as well
+
+a-list
+
+;; You can get the first element of a list
+
+(first a-list)
+
+;; or the tail of a list
+
+(rest a-list)
+
+;; which allows you to easly verify how ClojureScript shares data
+;; structure instead of inefficiently copying data for supporting
+;; immutability.
+
+(def another-list (conj a-list :front))
+
+another-list
+
+a-list
+
+(identical? (rest another-list) a-list)
+
+;; `identical?` checks whether two things are represented by the same
+;; thing in memory with.
 
 ;; Equality
 ;; ============================================================================
@@ -446,23 +481,21 @@ a-map
 
 (= [1 2 3] '(1 2 3))
 
-;; It is possible to check whether two things are represented by the same thing
-;; in memory with `identical?`.
+;; Again, it is possible to check whether two things are represented
+;; by the same thing in memory with `identical?`.
 
 (def my-vec [1 2 3])
 (def your-vec [1 2 3])
 
 (identical? my-vec your-vec)
 
-
 ;; Control
 ;; ============================================================================
 
-;; In order to write useful programs we need to be able to be able to express
-;; control. ClojureScript provides the usual control constructs, however
-;; truth-y and false-y values are not the same as in JavaScript so it's worth
-;; reviewing.
-
+;; In order to write useful programs we need to be able to express
+;; control. ClojureScript provides the usual control constructs,
+;; however truth-y and false-y values are not the same as in
+;; JavaScript so it's worth reviewing.
 
 ;; if
 ;; ----------------------------------------------------------------------------
@@ -479,6 +512,36 @@ a-map
   "An empty string is not false-y"
   "Yuck")
 
+;; the empty vector
+
+(if []
+  "An empty vector is not false-y"
+  "Yuck")
+
+;; the empty list
+
+(if ()
+  "An empty list is not false-y"
+  "Yuck")
+
+;; the empty map
+
+(if {}
+  "An empty map is not false-y"
+  "Yuck")
+
+;; the empty set
+
+(if #{}
+  "An empty set is not false-y"
+  "Yuck")
+
+;; and even the empty regexp
+
+(if #""
+  "An empty regexp is not false-y"
+  "Yuck")
+
 ;; The only false-y values in ClojureScript are `nil` and `false`. `undefined`
 ;; is not really a valid ClojureScript value and is generally coerced to `nil`.
 
@@ -486,14 +549,13 @@ a-map
 ;; cond
 ;; ----------------------------------------------------------------------------
 
-;; Nesting if tends to be noisy and hard to read so ClojureScript provides
-;; a `cond` macro to deal with this.
+;; Nesting `if` tends to be noisy and hard to read so ClojureScript
+;; provides a `cond` macro to deal with this.
 
 (cond
   nil "Not going to return this"
   false "Nope not going to return this either"
   :else "Default case")
-
 
 ;; loop/recur
 ;; ----------------------------------------------------------------------------
@@ -900,7 +962,7 @@ x
 
 ;; Here are some highlights and patterns that newcomers to ClojureScript might
 ;; find useful. Remember you can type Control-Shift-D at anytime to bring up
-;; the documentation panel to see what any of these function do.
+;; the documentation panel to see what any of these function do. 
 
 (apply str (interpose ", " ["Bob" "Mary" "George"]))
 
@@ -958,12 +1020,21 @@ x
 
 (defprotocol MyProtocol (awesome [this]))
 
+;; It's idiomatic to name the first argument of a protocol's functions
+;; as `this` which remembers you that it is the argument used by
+;; ClojureScript to dispatch the right function implementation on the
+;; basis of the type of the value of `this`
+
 ;; Now imagine we want JavaScript strings to participate. We can do this
 ;; simply.
 
 (extend-type string
   MyProtocol
   (awesome [_] "Totally awesome!"))
+
+;; As said while learning about `let` special form, when we're not
+;; interested in the value of an argument it's idiomatic to use the
+;; underscore a sa placeholder as above.
 
 (awesome "Is this awesome?")
 

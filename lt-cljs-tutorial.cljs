@@ -384,6 +384,8 @@ a-map
 
 (identity {:user/foo ::foo})
 
+;; Namespaced keywords are essential to Light Table's modularity.
+
 ;; Sets
 ;; ----------------------------------------------------------------------------
 

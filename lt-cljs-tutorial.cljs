@@ -1023,7 +1023,7 @@ x
 (defprotocol MyProtocol (awesome [this]))
 
 ;; It's idiomatic to name the first argument of a protocol's functions
-;; as `this` which remembers you that it is the argument used by
+;; as `this` which reminds you that it is the argument used by
 ;; ClojureScript to dispatch the right function implementation on the
 ;; basis of the type of the value of `this`
 
@@ -1062,7 +1062,7 @@ x
 ;; Sometimes it's useful to make an anonymous type which implements some
 ;; various protocols.
 
-;; For example say we want JavaScript object to support ILookup. Now we don't
+;; For example say we want a JavaScript object to support ILookup. Now we don't
 ;; want to blindly `extend-type object`, that would pollute the behavior of plain
 ;; JavaScript objects for everyone.
 

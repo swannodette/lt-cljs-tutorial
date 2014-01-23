@@ -1113,7 +1113,9 @@ x
 ;; extend-protocol
 ;; ----------------------------------------------------------------------------
 
-;; Sometimes you want to extend several types to a protocol at once.
+;; Sometimes you want to extend several types to a protocol at once. You can
+;; use extend-protocol for this. extend-protocol simply desugars into multiple
+;; extend-type forms.
 
 (extend-protocol MyProtocol
   js/Date

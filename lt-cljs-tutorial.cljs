@@ -10,8 +10,8 @@
 ;; Light Table UI. Once connected you can evaluate all the forms in this file
 ;; by placing the cursor after the form and typing Command-ENTER.
 
-;; IMPORTANT: You must evaluate the very first form, the namespace definition.
-
+;; IMPORTANT: You must evaluate the very first form, the namespace
+;; definition.
 
 ;; Declaring a namespaces
 ;; ----------------------------------------------------------------------------
@@ -67,7 +67,6 @@
 ;; you can include code samples or quick tests in-line with the rest of
 ;; your code.
 
-
 ;; Definitions
 ;; ----------------------------------------------------------------------------
 
@@ -103,7 +102,6 @@ lt-cljs-tutorial/x
 
 (z)
 
-
 ;; Literal data types
 ;; ----------------------------------------------------------------------------
 
@@ -116,6 +114,10 @@ lt-cljs-tutorial/x
 ;; Strings
 
 (def a-string "Hello!")
+
+;; Regular Expressions
+
+(def a-regexp #"\d{3}-?\d{3}-?\d{4}")
 
 ;; Numbers
 
@@ -130,12 +132,17 @@ lt-cljs-tutorial/x
 
 ;; You should not abuse the function literal notation as it degrades readability
 ;; outside of simple cases. It is nice for simple functional cases such as
-;; the following.
+;; the following. 
 
 (map (fn [n] (* n 2)) [1 2 3 4 5])
 
+;; more on vector literals and map function later
+
 (map #(* % 2) [1 2 3 4 5])
 
+;; Did you note that we passed an anonymous function as first argument
+;; of the `map` function? Nothing new for a JavaScript programmer
+;; JavaScript got some inspiration from the Lisp land.
 
 ;; JavaScript data type literals
 ;; ----------------------------------------------------------------------------
@@ -176,13 +183,19 @@ lt-cljs-tutorial/x
 
 (def a-date (js/Date.))
 
+(def another-date #inst "2014-01-15")
+
 ;; Note the above returns an `#inst` data literal.
 
-(def another-date #inst "2014-01-15")
+(def another-regexp (js/RegExp. "\\d{3}-?\\d{3}-?\\d{4}"))
 
 ;; Handy
 
 ;; NOTE: js/Foo is how you refer to global JavaScript entities of any kind.
+
+js/Date
+
+js/RegExp
 
 js/requestAnimationFrame
 
@@ -212,25 +225,45 @@ js/requestAnimationFrame
 
 ;; We can add an element to the end.
 
-(conj a-vector 6)
+(def another-vector (conj a-vector 6))
 
-;; Note this does not mutate the array! `a-vector` will be left unchanged.
+;; Note this does not mutate the array! `a-vector` will be left
+;; unchanged.
 
 a-vector
 
-;; Hallelujah!
+another-vector
 
-;; We can access any element in a vector with `nth`. The following will
-;; return the second element.
+;; Hallelujah! Here is where some ClojureScript magic
+;; happens. `another-vector` appears to be a completely new vector
+;; compared to `a-vector`. But is not really so. Internally, the new
+;; vector efficientely shares the `a-vector` structure. In this way you
+;; get the benefits of immutability without paying in performance.
+
+;; We can access any element in a vector with `nth`. The followings
+;; will return the second element.
+
+(nth a-vector 1)
 
 (nth ["foo" "bar" "baz"] 1)
+
+;; or with `get`
+
+(get a-vector 0)
+
+;; which allows you to return an alternate value when the index is
+;; out-of bounds.
+
+(get a-vector -1 :out-of-bounds)
+(get a-vector (count a-vector) :out-of-bounds)
 
 ;; Surprisingly vectors can be treated as functions. This is actually
 ;; a very useful property for associative data structures to have as
 ;; we'll see below with sets.
 
-(["foo" "bar" "baz"] 1)
+(a-vector 1)
 
+(["foo" "bar" "baz"] 1)
 
 ;; Maps
 ;; ----------------------------------------------------------------------------
@@ -240,7 +273,11 @@ a-vector
 ;; ClojureScript maps are immutable and considerably more flexible.
 
 ;; Let's define a simple map. Note `:foo` is a ClojureScript keyword.
-;; ClojureScript programmers generally do not use strings for keys.
+;; ClojureScript programmers prefers to use keywords for keys instead
+;; of strings. They are more distinguishable from the rest of the
+;; code, more efficient than plain strings and they can be used in
+;; function position (i.e. first position after the open parens), as
+;; we'll see in a moment.
 
 (def a-map {:foo "bar" :baz "woz"})
 
@@ -252,13 +289,19 @@ a-vector
 
 (get a-map :foo)
 
+;; and return an alternative value when the key is not present
+
+(get a-map :bar :not-found)
+
 ;; We can add a new key-value pair with `assoc`.
 
-(assoc a-map :noz "goz")
+(def another-map (assoc a-map :noz "goz"))
 
-;; Again a-map is unchanged!
+;; Again a-map is unchanged! Same magic as before for vectors
 
 a-map
+
+another-map
 
 ;; We can remove a key value pair with `dissoc`.
 
@@ -288,6 +331,23 @@ a-map
 ;; And all of the values with `vals`.
 
 (vals a-map)
+
+;; We can put a lot of things in a map, even other maps
+
+(def a-nested-map {:customer-id 1e6 
+                   :preferences {:nickname "Bob"
+                                 :avatar "http://en.gravatar.com/userimage/0/0.jpg"}
+                   :services {:alerts {:daily true}}})
+
+;; and navigate its keys to get the nested value you're interested in
+
+(get-in a-nested-map [:preferences :nickname])
+(get-in a-nested-map [:services :alerts :daily])
+
+;; or just find a top level key-value pair (i.e. MapEntry) by key
+
+(find a-nested-map :customer-id)
+(find a-nested-map :services)
 
 ;; There are many cool ways to create maps.
 
@@ -325,7 +385,6 @@ a-map
 (identity {:user/foo ::foo})
 
 ;; Namespaced keywords are essential to Light Table's modularity.
-
 
 ;; Sets
 ;; ----------------------------------------------------------------------------
@@ -368,12 +427,45 @@ a-map
 ;; Lists
 ;; ----------------------------------------------------------------------------
 
-;; A less common ClojureScript data structure is lists. This may be surprising
-;; as ClojureScript is a Lisp, but maps, vectors and sets are the goto for most
-;; applications. Still lists are sometimes useful.
+;; A less common ClojureScript data structure is lists. This may be
+;; surprising as ClojureScript is a Lisp, but maps, vectors and sets
+;; are the goto for most applications. Still lists are sometimes
+;; useful, expecially when dealing with code (i.e. code is data).
 
 (def a-list '(:foo :bar :baz))
 
+;; `conj` is "polymorphic" on lists as well and it's smart enough to
+;; add the new item in the most efficient way on the basis of the
+;; collection type.
+
+(conj a-list :front)  
+
+;; and lists are immutable as well
+
+a-list
+
+;; You can get the first element of a list
+
+(first a-list)
+
+;; or the tail of a list
+
+(rest a-list)
+
+;; which allows you to easly verify how ClojureScript shares data
+;; structure instead of inefficiently copying data for supporting
+;; immutability.
+
+(def another-list (conj a-list :front))
+
+another-list
+
+a-list
+
+(identical? (rest another-list) a-list)
+
+;; `identical?` checks whether two things are represented by the same
+;; thing in memory with.
 
 ;; Equality
 ;; ============================================================================
@@ -391,23 +483,21 @@ a-map
 
 (= [1 2 3] '(1 2 3))
 
-;; It is possible to check whether two things are represented by the same thing
-;; in memory with `identical?`.
+;; Again, it is possible to check whether two things are represented
+;; by the same thing in memory with `identical?`.
 
 (def my-vec [1 2 3])
 (def your-vec [1 2 3])
 
 (identical? my-vec your-vec)
 
-
 ;; Control
 ;; ============================================================================
 
-;; In order to write useful programs we need to be able to be able to express
-;; control. ClojureScript provides the usual control constructs, however
-;; truth-y and false-y values are not the same as in JavaScript so it's worth
-;; reviewing.
-
+;; In order to write useful programs we need to be able to express
+;; control. ClojureScript provides the usual control constructs,
+;; however truth-y and false-y values are not the same as in
+;; JavaScript so it's worth reviewing.
 
 ;; if
 ;; ----------------------------------------------------------------------------
@@ -424,6 +514,36 @@ a-map
   "An empty string is not false-y"
   "Yuck")
 
+;; the empty vector
+
+(if []
+  "An empty vector is not false-y"
+  "Yuck")
+
+;; the empty list
+
+(if ()
+  "An empty list is not false-y"
+  "Yuck")
+
+;; the empty map
+
+(if {}
+  "An empty map is not false-y"
+  "Yuck")
+
+;; the empty set
+
+(if #{}
+  "An empty set is not false-y"
+  "Yuck")
+
+;; and even the empty regexp
+
+(if #""
+  "An empty regexp is not false-y"
+  "Yuck")
+
 ;; The only false-y values in ClojureScript are `nil` and `false`. `undefined`
 ;; is not really a valid ClojureScript value and is generally coerced to `nil`.
 
@@ -431,14 +551,13 @@ a-map
 ;; cond
 ;; ----------------------------------------------------------------------------
 
-;; Nesting if tends to be noisy and hard to read so ClojureScript provides
-;; a `cond` macro to deal with this.
+;; Nesting `if` tends to be noisy and hard to read so ClojureScript
+;; provides a `cond` macro to deal with this.
 
 (cond
   nil "Not going to return this"
   false "Nope not going to return this either"
   :else "Default case")
-
 
 ;; loop/recur
 ;; ----------------------------------------------------------------------------
@@ -541,8 +660,7 @@ a-map
 ;; ============================================================================
 
 ;; Unlike JavaScript there is no hoisting in ClojureScript. ClojureScript
-;; has lexical scoping. In ClojureScript functions parameters and let binding
-;; locals are not mutable!
+;; has lexical scoping. 
 
 (def some-x 1)
 
@@ -551,14 +669,47 @@ a-map
 
 some-x
 
-;; Unlike JavaScript loop locals are not mutable! In JavaScript you would see
-;; a list of ten 9's. In ClojureScript we see the expected numbers from 0 to 9.
+;; Closures
+;; ----------------------------------------------------------------------------
+
+;; Could a language with such a name miss closures? Sure it can't. You
+;; may be already familiar with them in JavaScript, even if it's a
+;; variable scoped language.
+
+(let [a 1e3]
+  (defn foo []
+    (* a a))
+  (defn bar []
+    (+ (foo) a)))
+
+;; Above we defined `foo` and `bar` functions inside the scope of a
+;; `let` form and they both know about `a` (i.e. they close over `a`)
+
+(foo)
+(bar)
+
+;; And Nobody else. 
+
+(comment 
+  (defn baz []
+    (type a))
+  (baz)
+  )
+
+;; That's why some people say closures are the poor's man objects.
+;; They encapsulate the information as well. 
+
+;; But in ClojureScript functions parameters and let bindings locals
+;; are not mutable! And loop locals too!
 
 (let [fns (loop [i 0 ret []]
             (if (< i 10)
               (recur (inc i) (conj ret (fn [] i)))
               ret))]
   (map #(%) fns))
+
+;; In JavaScript you would see a list of ten 9's. In ClojureScript we
+;; see the expected numbers from 0 to 9.
 
 
 ;; Destructuring
@@ -860,7 +1011,7 @@ x
 
 ;; Here are some highlights and patterns that newcomers to ClojureScript might
 ;; find useful. Remember you can type Control-Shift-D at anytime to bring up
-;; the documentation panel to see what any of these function do.
+;; the documentation panel to see what any of these function do. 
 
 (apply str (interpose ", " ["Bob" "Mary" "George"]))
 
@@ -918,12 +1069,21 @@ x
 
 (defprotocol MyProtocol (awesome [this]))
 
+;; It's idiomatic to name the first argument of a protocol's functions
+;; as `this` which reminds you that it is the argument used by
+;; ClojureScript to dispatch the right function implementation on the
+;; basis of the type of the value of `this`
+
 ;; Now imagine we want JavaScript strings to participate. We can do this
 ;; simply.
 
 (extend-type string
   MyProtocol
   (awesome [_] "Totally awesome!"))
+
+;; As said while learning about `let` special form, when we're not
+;; interested in the value of an argument it's idiomatic to use the
+;; underscore as a placeholder like above.
 
 (awesome "Is this awesome?")
 
@@ -949,7 +1109,7 @@ x
 ;; Sometimes it's useful to make an anonymous type which implements some
 ;; various protocols.
 
-;; For example say we want JavaScript object to support ILookup. Now we don't
+;; For example say we want a JavaScript object to support ILookup. Now we don't
 ;; want to blindly `extend-type object`, that would pollute the behavior of plain
 ;; JavaScript objects for everyone.
 

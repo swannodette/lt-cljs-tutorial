@@ -132,7 +132,7 @@ lt-cljs-tutorial/x
 
 ;; You should not abuse the function literal notation as it degrades readability
 ;; outside of simple cases. It is nice for simple functional cases such as
-;; the following. 
+;; the following.
 
 (map (fn [n] (* n 2)) [1 2 3 4 5])
 
@@ -334,7 +334,7 @@ a-map
 
 ;; We can put a lot of things in a map, even other maps
 
-(def a-nested-map {:customer-id 1e6 
+(def a-nested-map {:customer-id 1e6
                    :preferences {:nickname "Bob"
                                  :avatar "http://en.gravatar.com/userimage/0/0.jpg"}
                    :services {:alerts {:daily true}}})
@@ -438,7 +438,7 @@ a-map
 ;; add the new item in the most efficient way on the basis of the
 ;; collection type.
 
-(conj a-list :front)  
+(conj a-list :front)
 
 ;; and lists are immutable as well
 
@@ -641,6 +641,28 @@ a-list
 ;; extension, but instead of limiting dispatch to type, dispatch is controlled
 ;; by whatever value the dispatch fn originally supplied to defmulti returns.
 
+;; Here is the simplest multimethod you can write. It simply dispatches on
+;; the value received.
+
+(defmulti simple-multi identity)
+
+;; Now we can define methods for particular values.
+
+(defmethod simple-multi 1
+  [value] "Dispatched on 1")
+
+(simple-multi 1)
+
+(defmethod simple-multi "foo"
+  [value] "Dispatched on foo")
+
+(simple-multi "foo")
+
+;; However we haven't defined a case for "bar"
+
+(simple-multi "bar")
+
+
 ;; Here is a function that takes a list. It dispatches on the first element
 ;; of the list!
 
@@ -660,7 +682,7 @@ a-list
 ;; ============================================================================
 
 ;; Unlike JavaScript there is no hoisting in ClojureScript. ClojureScript
-;; has lexical scoping. 
+;; has lexical scoping.
 
 (def some-x 1)
 
@@ -688,16 +710,16 @@ some-x
 (foo)
 (bar)
 
-;; And Nobody else. 
+;; And Nobody else.
 
-(comment 
+(comment
   (defn baz []
     (type a))
   (baz)
   )
 
 ;; That's why some people say closures are the poor's man objects.
-;; They encapsulate the information as well. 
+;; They encapsulate the information as well.
 
 ;; But in ClojureScript functions parameters and let bindings locals
 ;; are not mutable! And loop locals too!
@@ -1011,7 +1033,7 @@ x
 
 ;; Here are some highlights and patterns that newcomers to ClojureScript might
 ;; find useful. Remember you can type Control-Shift-D at anytime to bring up
-;; the documentation panel to see what any of these function do. 
+;; the documentation panel to see what any of these function do.
 
 (apply str (interpose ", " ["Bob" "Mary" "George"]))
 

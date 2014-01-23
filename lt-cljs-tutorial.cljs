@@ -1101,7 +1101,7 @@ x
 
 (extend-type string
   MyProtocol
-  (awesome [_] "Totally awesome!"))
+  (awesome [this] (vector this "Totally awesome!")))
 
 ;; As said while learning about `let` special form, when we're not
 ;; interested in the value of an argument it's idiomatic to use the

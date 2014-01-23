@@ -645,8 +645,7 @@ a-list
 ;; ============================================================================
 
 ;; Unlike JavaScript there is no hoisting in ClojureScript. ClojureScript
-;; has lexical scoping. In ClojureScript functions parameters and let binding
-;; locals are not mutable!
+;; has lexical scoping. 
 
 (def some-x 1)
 
@@ -655,14 +654,47 @@ a-list
 
 some-x
 
-;; Unlike JavaScript loop locals are not mutable! In JavaScript you would see
-;; a list of ten 9's. In ClojureScript we see the expected numbers from 0 to 9.
+;; Closures
+;; ----------------------------------------------------------------------------
+
+;; Could a language with such a name miss closures? Sure it can't. You
+;; may be already familiar with them in JavaScript, even if it's a
+;; variable scoped language.
+
+(let [a 1e3]
+  (defn foo []
+    (* a a))
+  (defn bar []
+    (+ (foo) a)))
+
+;; Above we defined `foo` and `bar` functions inside the scope of a
+;; `let` form and they both know about `a` (i.e. they close over `a`)
+
+(foo)
+(bar)
+
+;; And Nobody else. 
+
+(comment 
+  (defn baz []
+    (type a))
+  (baz)
+  )
+
+;; That's why some people say closures are the poor's man objects.
+;; They encapsulate the information as well. 
+
+;; But in ClojureScript functions parameters and let bindings locals
+;; are not mutable! And loop locals too!
 
 (let [fns (loop [i 0 ret []]
             (if (< i 10)
               (recur (inc i) (conj ret (fn [] i)))
               ret))]
   (map #(%) fns))
+
+;; In JavaScript you would see a list of ten 9's. In ClojureScript we
+;; see the expected numbers from 0 to 9.
 
 
 ;; Destructuring

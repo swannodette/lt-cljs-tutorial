@@ -563,7 +563,7 @@ a-list
 ;; ----------------------------------------------------------------------------
 
 ;; The most primitive looping construct in ClojureScript is loop/recur.
-;; Like let you establishing bindings - they will be the initial bindings of
+;; Like let you establish bindings - they will be the initial bindings of
 ;; the loop. Like let you may have a sequence of forms for the body. In tail
 ;; positions you may write a recur statement that will set the bindings for
 ;; the next iteration of the loop. Using loop/recur is usually considered bad

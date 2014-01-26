@@ -706,8 +706,9 @@ some-x
 
 ;; Above we defined `foo` and `bar` functions inside the scope of a
 ;; `let` form and they both know about `a` (i.e. they close over `a`)
-;; Even if defined inside a `let`, `foo` and `bar` are available
-;; in the outer scope.
+;; Note, even if defined inside a `let`, `foo` and `bar` are available
+;; in the outer scope. This is because all `def` expressions are always
+;; top level. See the footnote at the end of this sections.
 
 
 (foo)
@@ -735,6 +736,20 @@ some-x
 
 ;; In JavaScript you would see a list of ten 9's. In ClojureScript we
 ;; see the expected numbers from 0 to 9.
+
+;; FOOTNOTE:
+;;
+;; `def` expressions (including `defn`) are always top level. People familiar
+;; with Scheme or other Lisps often mistakenly write the following in Clojure:
+
+(defn not-scheme []
+  (defn no-no-no []))
+
+;; This is almost always incorrect. If you need to write a local function just
+;; do it with a let binding.
+
+(defn outer-fn []
+  (let [inner-fn (fn [])]))
 
 
 ;; Destructuring

@@ -706,6 +706,9 @@ some-x
 
 ;; Above we defined `foo` and `bar` functions inside the scope of a
 ;; `let` form and they both know about `a` (i.e. they close over `a`)
+;; Even if defined inside a `let`, `foo` and `bar` are available
+;; in the outer scope.
+
 
 (foo)
 (bar)

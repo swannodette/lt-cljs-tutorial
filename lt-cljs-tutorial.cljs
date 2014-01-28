@@ -67,6 +67,7 @@
 ;; you can include code samples or quick tests in-line with the rest of
 ;; your code.
 
+
 ;; Definitions
 ;; ----------------------------------------------------------------------------
 
@@ -101,6 +102,7 @@ lt-cljs-tutorial/x
 (defn z [] 1)
 
 (z)
+
 
 ;; Literal data types
 ;; ----------------------------------------------------------------------------
@@ -143,6 +145,7 @@ lt-cljs-tutorial/x
 ;; Did you note that we passed an anonymous function as first argument
 ;; of the `map` function? Nothing new for a JavaScript programmer
 ;; JavaScript got some inspiration from the Lisp land.
+
 
 ;; JavaScript data type literals
 ;; ----------------------------------------------------------------------------
@@ -265,6 +268,7 @@ another-vector
 
 (["foo" "bar" "baz"] 1)
 
+
 ;; Maps
 ;; ----------------------------------------------------------------------------
 
@@ -386,6 +390,7 @@ a-map
 
 ;; Namespaced keywords are essential to Light Table's modularity.
 
+
 ;; Sets
 ;; ----------------------------------------------------------------------------
 
@@ -423,6 +428,7 @@ a-map
 
 (check :cat)
 (check :zebra)
+
 
 ;; Lists
 ;; ----------------------------------------------------------------------------
@@ -467,6 +473,7 @@ a-list
 ;; `identical?` checks whether two things are represented by the same
 ;; thing in memory with.
 
+
 ;; Equality
 ;; ============================================================================
 
@@ -490,6 +497,7 @@ a-list
 (def your-vec [1 2 3])
 
 (identical? my-vec your-vec)
+
 
 ;; Control
 ;; ============================================================================
@@ -558,6 +566,7 @@ a-list
   nil "Not going to return this"
   false "Nope not going to return this either"
   :else "Default case")
+
 
 ;; loop/recur
 ;; ----------------------------------------------------------------------------
@@ -857,6 +866,7 @@ some-x
 
 (reduce + (range 100))
 
+
 ;; List comprehensions
 ;; ----------------------------------------------------------------------------
 
@@ -928,6 +938,7 @@ some-x
 ;; You can access metadata with `meta`.
 
 (meta decorated-data)
+
 
 ;; Error Handling
 ;; ============================================================================
@@ -1026,6 +1037,7 @@ x
 
 ;; Note that the updating function has to be free of side-effects because a
 ;; waiting writer could call it more than once in a spin loop.
+
 
 ;; set!
 ;; ----------------------------------------------------------------------------
@@ -1249,6 +1261,7 @@ x
   Object
   (setB [this val] (set! b val)))
 
+
 ;; defrecord
 ;; ----------------------------------------------------------------------------
 
@@ -1379,6 +1392,7 @@ x
 ;; You can access properties with the `.-` property access syntax.
 
 (.-getSeconds a-date)
+
 
 ;; Method Calls
 ;; ----------------------------------------------------------------------------

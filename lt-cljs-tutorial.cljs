@@ -134,17 +134,13 @@ lt-cljs-tutorial/x
 
 ;; You should not abuse the function literal notation as it degrades readability
 ;; outside of simple cases. It is nice for simple functional cases such as
-;; the following.
+;; the following. You could map over a ClojureScript vector like this:
 
 (map (fn [n] (* n 2)) [1 2 3 4 5])
 
-;; more on vector literals and map function later
+;; Or you can save typing a few characters like this:
 
 (map #(* % 2) [1 2 3 4 5])
-
-;; Did you note that we passed an anonymous function as first argument
-;; of the `map` function? Nothing new for a JavaScript programmer
-;; JavaScript got some inspiration from the Lisp land.
 
 
 ;; JavaScript data type literals
@@ -202,7 +198,7 @@ js/RegExp
 
 js/requestAnimationFrame
 
-;; If you're curious about other JavaScrip interop jump to the bottom of this
+;; If you're curious about other JavaScript interop jump to the bottom of this
 ;; tutorial.
 
 
@@ -243,7 +239,7 @@ another-vector
 ;; vector efficientely shares the `a-vector` structure. In this way you
 ;; get the benefits of immutability without paying in performance.
 
-;; We can access any element in a vector with `nth`. The followings
+;; We can access any element in a vector with `nth`. The following
 ;; will return the second element.
 
 (nth a-vector 1)

@@ -12,7 +12,7 @@ I hope this can be a kind of ClojureScript wiki of sorts for Light
 Table users.  Pull requests welcome.
 
 For users of editors/IDEs supporting [nREPL][1] there is
-[a port of this tutorial][2] targeting those development environment
+[a port of this tutorial][2] targeting those development environments
 as well.
 
 [1]: https://github.com/clojure/tools.nrepl

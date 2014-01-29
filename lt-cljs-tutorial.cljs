@@ -971,9 +971,8 @@ some-x
     e)
   (catch Error e
     e)
-   (finally
-     "Cleanup here"
-   ))
+  (finally
+     "Cleanup here"))
 
 
 ;; Mutation

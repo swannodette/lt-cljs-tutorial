@@ -963,6 +963,18 @@ some-x
   (catch :default e
     e))
 
+;; Catches are optional. You can also use multiple forms to handle different types of errors.
+
+(try
+  (throw (js/Error. "Oops"))
+  (catch js/Error e
+    e)
+  (catch Error e
+    e)
+   (finally
+     "Cleanup here"
+   ))
+
 
 ;; Mutation
 ;; ============================================================================
@@ -1427,31 +1439,3 @@ x
 (aset yucky-stuff 1 4)
 
 yucky-stuff
-
-
-;; Exceptions
-;; ----------------------------------------------------------------------------
-
-;; try/catch/finally forms behave similar to their JavaScript equivalent.
-;; Catch takes a "class" (constructor function) and only handles exceptions of that type.
-;; Catch forms are optional, and you can use multiple forms to handle different types of exceptions.
-
-(try
-  ;; body
-  (catch Error err
-    ;; handler
-    )
-  (catch js/Error err
-    ;; handler
-    )
-  (finally
-   ;; handler that always executes
-   ))
-
-;; throw form, as you'd expect, takes an exception and throws it
-
-(comment
-  (throw (js/Error. "Avoid checked exceptions!"))
-  )
-
-;; Note: Don't forget to qualify js exception types, like Error, in both throw and catch expressions as js/Error.

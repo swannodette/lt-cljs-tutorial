@@ -373,7 +373,7 @@ a-map
 
 (identity :foo)
 
-;; If you add an additional preceding colon you'll get namespaced keyword.
+;; If you add an additional preceding colon you'll get a namespaced keyword.
 
 (identity ::foo)
 

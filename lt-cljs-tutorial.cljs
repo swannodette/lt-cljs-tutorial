@@ -1359,7 +1359,7 @@ x
 (assoc-in (contact "Bob" "Smith" "bob.smith@acme.com")
           [:person :first] "Robert")
 
-;; It you need to use the previous value of a nested field for calculating the
+;; If you need to use the previous value of a nested field for calculating the
 ;; new one, you can use 'update-in', like with maps.
 
 (update-in (contact "Bob" "Smith" "bob.smith@acme.com")
@@ -1415,7 +1415,7 @@ x
 
 (make-array 32)
 
-;; You can access an element of a array with `aget`.
+;; You can access an element of an array with `aget`.
 
 (aget #js ["one" "two" "three"] 1)
 

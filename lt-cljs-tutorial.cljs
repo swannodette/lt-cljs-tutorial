@@ -1127,10 +1127,6 @@ x
   MyProtocol
   (awesome [this] (vector this "Totally awesome!")))
 
-;; As said while learning about `let` special form, when we're not
-;; interested in the value of an argument it's idiomatic to use the
-;; underscore as a placeholder like above.
-
 (awesome "Is this awesome?")
 
 
@@ -1140,6 +1136,10 @@ x
 ;; Sometimes you want to extend several types to a protocol at once. You can
 ;; use extend-protocol for this. extend-protocol simply desugars into multiple
 ;; extend-type forms.
+
+;; As said while learning about `let` special form, when we're not
+;; interested in the value of an argument it's idiomatic to use the
+;; underscore as a placeholder like above.
 
 (extend-protocol MyProtocol
   js/Date

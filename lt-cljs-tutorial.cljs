@@ -662,8 +662,10 @@ a-list
 (simple-multi "foo")
 
 ;; However we haven't defined a case for "bar"
-
-(simple-multi "bar")
+; (Highlight and evaluate the `simple-multi` form below)
+(comment
+  (simple-multi "bar")
+  )
 
 
 ;; Here is a function that takes a list. It dispatches on the first element
@@ -945,8 +947,11 @@ some-x
 (js/Error. "Oops")
 
 ;; You can throw an error like this.
+;; (Highlight and evaluate the `throw` form below)
 
-(throw (js/Error. "Oops"))
+(comment
+  (throw (js/Error. "Oops"))
+  )
 
 ;; You can catch an error like this.
 
@@ -962,6 +967,17 @@ some-x
   (throw (js/Error. "Oops"))
   (catch :default e
     e))
+
+;; Catches are optional. You can also use multiple forms to handle different types of errors.
+
+(try
+  (throw (js/Error. "Oops"))
+  (catch js/Error e
+    e)
+  (catch Error e
+    e)
+  (finally
+     "Cleanup here"))
 
 
 ;; Mutation

@@ -1134,7 +1134,7 @@ x
 (get {:foo "bar"} :foo)
 (get [:cat :bird :dog] 1)
 
-;; Map destructing actually desugars into `get` calls. That means if you extend
+;; Map destructuring actually desugars into `get` calls. That means if you extend
 ;; your type to ILookup it will also support map destructuring!
 
 
@@ -1186,8 +1186,8 @@ x
 ;; reify
 ;; ----------------------------------------------------------------------------
 
-;; Sometimes it's useful to make an anonymous type which implements some
-;; various protocols.
+;; Sometimes it's useful to make an anonymous type which implements various
+;; protocols.
 
 ;; For example say we want a JavaScript object to support ILookup. Now we don't
 ;; want to blindly `extend-type object`, that would pollute the behavior of plain

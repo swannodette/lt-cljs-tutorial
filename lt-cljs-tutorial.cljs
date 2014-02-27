@@ -814,6 +814,22 @@ some-x
 (let [{:keys [first last]} {:first "Bob" :last "Smith"}]
   [first last])
 
+; We can also destructure a nested map
+
+(let [{:keys [first last] {:keys [addr1 addr2]} :address} {:first "Bob" :last "Smith" :address {:addr1 "123" :addr2 "Main street"}}]
+  [first last addr1 addr2])
+
+; Similar to :keys for keyword, :strs and :syms directives are available for matching string and symbol :keys
+
+(let [{:strs [first last]} {"first" "Bob" "last" "Smith"}]
+  [first last])
+
+(let [first 1
+      last 2
+      {:syms [first last]} {'first "Bob" 'last "Smith"}]
+  [first last])
+
+
 ;; The above map destructuring form is very useful when you need to
 ;; define a function with optional, non positional and defaulted
 ;; arguments.

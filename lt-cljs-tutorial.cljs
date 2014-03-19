@@ -474,11 +474,11 @@ a-list
 ;; ClojureScript has a much simpler notion of equality than what is present
 ;; in JavaScript. In ClojureScript equality is always deep equality.
 
-(= {:foo "bar" :baz "woz"} {:foo "bar" :baz "woz"})
+(= {:one 1 :two "2"} {:one 1 :two "2"})
 
 ;; Maps are not ordered.
 
-(= {:foo "bar" :baz "woz"} {:baz "woz" :foo "bar"})
+(= {:one 1 :two "2"} {:two "2" :one 1})
 
 ;; For sequential collections, equality just works.
 

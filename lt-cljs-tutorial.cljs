@@ -670,6 +670,7 @@ a-list
 
 ;; Here is a function that takes a list. It dispatches on the first element
 ;; of the list!
+;; Note that this example uses destructuring, which is covered later.
 
 (defmulti parse (fn [[f & r :as form]] f))
 

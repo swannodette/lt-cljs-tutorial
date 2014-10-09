@@ -1031,7 +1031,7 @@ x
 ;; ------------------------------------------------------------------------------
 
 ;; If you want to change the value of an atom on the basis of its current value,
-;; you can use `swap!`. In its simplest form `swap!` accept as first argument
+;; you can use `swap!`. In its simplest form, `swap!` accepts as a first argument
 ;; the atom itself and as a second argument an updating function of one argument
 ;; which will be instantiated with the current value of the atom. `swap!` returns
 ;; the new value of the atom.

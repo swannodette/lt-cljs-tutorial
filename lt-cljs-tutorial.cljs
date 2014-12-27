@@ -825,11 +825,8 @@ some-x
 (let [{:strs [first last]} {"first" "Bob" "last" "Smith"}]
   [first last])
 
-(let [first 1
-      last 2
-      {:syms [first last]} {'first "Bob" 'last "Smith"}]
+(let [{:syms [first last]} {'first "Bob" 'last "Smith"}]
   [first last])
-
 
 ;; The above map destructuring form is very useful when you need to
 ;; define a function with optional, non positional and defaulted

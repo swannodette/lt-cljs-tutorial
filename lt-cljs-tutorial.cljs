@@ -785,15 +785,15 @@ some-x
 (let [[r g b] [255 255 150]]
   g)
 
-;; _ is just a convention for saying that you are not interested at the
-;; item in the corresponding position. it has no other special meaning.
-;; Here we're only interested at the third local variable named `b`.
+;; _ is just a convention for saying that you are not interested in the
+;; item at the corresponding position. It has no other special meaning.
+;; Here we're only interested in the third local variable named `b`.
 
 (let [[_ _ b] [255 255 150]]
   b)
 
 ;; destructuring function arguments works just as well. Here we are
-;; only intersted at the second argument `g`.
+;; only interested in the second argument `g`.
 
 (defn green [[_ g _]] g)
 
